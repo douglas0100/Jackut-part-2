@@ -1,49 +1,45 @@
-public class Conta {
-    private String nome;
-    private String login;
-    private String senha;
-    //atributos abaixo são de perfil, deviam ser movidas para outra classe depois talvez
-    //---------------------------------------
+public class Perfil {
+    //criado por Matheus Antônio, 22/03/2021
+    //baseado levemente nas opções de perfil Facebook
+
+    //OBS: Ignorar comentário abaixo por enquanto - movendo atributos para
+    //classe Conta por motivo de simplicidade por enquanto
+
+    //objeto Perfil deve ser criado em classe "Conta" somente, atribuido na criação dela
+    //somente 1 perfil por conta. informações daqui não alteram funcionamento
+    //das outras classes (exceto por total de amigos, e lista de amigos)
+
+
     //Informações básicas
-    private int diaNascimento;
-    private String mesNascimento; 
-    private int anoNascimento;
-    private String genero;          //sexo da pessoa
+    private int diaNascimento = 0;
+    private String mesNascimento = "(vazio)"; 
+    private int anoNascimento = 0000;
+    private String genero = "(vazio)";          //sexo da pessoa
 
     //Informações de status atual
-    private String cidadeAtual;
-    private String estadoCivil;
+    private String cidadeNatal = "(vazio)";
+    private String cidadeAtual = "(vazio)";
+    private String estadoCivil = "(vazio)";
 
     //Informações de estudo/emprego
-    private String instituicaoEnsinoMedio;
-    private String instituicaoFaculdade;
-    private String ocupacaoTrabalho;
+    private String instituicaoEnsinoMedio = "(vazio)";
+    private String instituicaoFaculdade = "(vazio)";
+    private String ocupacaoTrabalho = "(vazio)";
 
     //Informações para Contato
-    private String contatoEmail;
-    private String contatoCelular;  //celular apenas, pelo que vi Face não tem telefone
-    //-----------------------------------------------------------
+    private String contatoEmail = "(vazio)";
+    private String contatoCelular = "(vazio)";  //celular apenas, pelo que vi Face não tem telefone
 
-    public Conta(String nome, String login, String senha){
-        this.nome = nome;
-        this.login = login;
-        this.senha = senha;
-    }
-    public String getNome() {
-        return nome;
-    }
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-    public String getLogin() { // Único que não alterará.
-        return login;
-    }
-    public String getSenha() {
-        return senha;
-    }
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
+    //Informações que usuário não altera diretamente
+    private int totalAmigos;
+    //esperando implementação de adição de amigos por Igor
+    private int anoConta = 2021;
+    //meio desnecessário, mas ainda legal de exibir - assumindo ser 2021 por enquanto
+
+    //Getters e Setters
+
+    //Informações básicas
+    //Aniversário, gênero
 
     public int getDiaNascimento() {
         return this.diaNascimento;
@@ -77,6 +73,19 @@ public class Conta {
         this.genero = genero;
     }
 
+
+    //Informações de status atual
+    //Cidade, Estado Civil
+
+
+    public String getCidadeNatal() {
+        return this.cidadeNatal;
+    }
+
+    public void setCidadeNatal(String cidadeNatal) {
+        this.cidadeNatal = cidadeNatal;
+    }
+
     public String getCidadeAtual() {
         return this.cidadeAtual;
     }
@@ -92,6 +101,8 @@ public class Conta {
     public void setEstadoCivil(String estadoCivil) {
         this.estadoCivil = estadoCivil;
     }
+
+    //Informações de estudo/emprego
 
     public String getInstituicaoEnsinoMedio() {
         return this.instituicaoEnsinoMedio;
@@ -133,13 +144,20 @@ public class Conta {
         this.contatoCelular = contatoCelular;
     }
 
-    
-
-    @Override
-    public String toString() {
-        return "Nome: "     + this.nome +
-               "\nLogin: "    + this.login;
+    public int getTotalAmigos() {
+        return this.totalAmigos;
     }
 
+    public void setTotalAmigos(int totalAmigos) {
+        this.totalAmigos = totalAmigos;
+    }
+
+    public int getAnoConta() {
+        return this.anoConta;
+    }
+
+    public void setAnoConta(int anoConta) {
+        this.anoConta = anoConta;
+    }
 
 }
