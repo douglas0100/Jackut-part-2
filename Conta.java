@@ -138,8 +138,39 @@ public class Conta {
     @Override
     public String toString() {
         return "Nome: "     + this.nome +
-               "\nLogin: "    + this.login;
+                "\nLogin: "    + this.login;
     }
+
+    //deixando separado assim para quando formos adicionar mais informações para o perfil
+    //estética fica mais agradável do que um return só para tudo
+    public String InfoBasicaToString() {
+        return "Perfil de "     + this.nome +
+        "\n******Informações Básicas******"+
+               "\nNascimento: "    + this.diaNascimento+ " de " + this.mesNascimento + " de " + this.anoNascimento +
+                
+               "\nSexo: "    + this.genero;
+    }
+
+    public String StatusAtualToString() {
+        return "\n******Status Atual******"    +
+        "\nCidade de Residência: "    + this.cidadeAtual+
+        "\nEstado Civil: "    + this.estadoCivil;
+    }
+
+    public String InfoProfissionToString() {
+        return "\n******Informações Profissionais******"    +
+        "\nInstituição do Ensino Médio: "    + this.instituicaoEnsinoMedio+
+        "\nInstituição de Ensino Superior: "    + this.instituicaoFaculdade+
+        "\nTrabalha em:  "    + this.ocupacaoTrabalho;
+    }
+
+    public String ContatoToString() {
+        return "\n******Contato******"    +
+        "\nE-Mail:" + this.contatoEmail+
+        "\nCelular:  "    + this.contatoCelular;
+    }
+
+
 
 
 }

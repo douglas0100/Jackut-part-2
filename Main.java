@@ -108,10 +108,22 @@ public class Main {
         }
     }
 
+
+    public static boolean isStringNumbersOnly(String opcao, int length) {
+        for (int i = 0; i < length; i++) {
+            if (opcao.charAt(i) >= '0' && opcao.charAt(i) <= '9') {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    }
+
     // Acesso de menu para usuário
     // Editar perfil, adicionar amigos, enviar mensagens e ler mensagens
     public static void loggedInMenu(int userID, Jackut jackutApp) {
-        int opcaoLogged;
+        String opcaoLogged;
 
         do {
             System.out.println("Bem vindo/a de volta," + jackutApp.obterNomeUsuario(userID));
@@ -120,41 +132,45 @@ public class Main {
             System.out.println("3 - Enviar uma Mensagem");
             System.out.println("4 - Ler Mensagens");
             System.out.println("5 - Logout");
-            opcaoLogged = input.nextInt();
-            input.nextLine();
+            boolean checkString;
+            do {
+                opcaoLogged = input.nextLine();
+                checkString = isStringNumbersOnly(opcaoLogged, opcaoLogged.length());
+                System.out.println(checkString);
+            } while (checkString == false);
 
             switch (opcaoLogged) {
 
-            case 1:
+            case "1":
                 System.out.println("Editar perfil");
                 perfilMenu(userID, jackutApp);
                 break;
-            case 2:
+            case "2":
                 System.out.println("Adicionar amigos");
                 System.out.println("NÃO IMPLEMENTADO");
                 break;
-            case 3:
+            case "3":
                 System.out.println("Enviar mensagem");
                 System.out.println("NÃO IMPLEMENTADO");
                 break;
-            case 4:
+            case "4":
                 System.out.println("Ler mensagens");
                 System.out.println("NÃO IMPLEMENTADO");
                 break;
-            case 5:
+            case "5":
                 System.out.println("Fazendo logout...");
                 break;
             default:
                 break;
             }
 
-        } while (opcaoLogged < 5);
+        } while (opcaoLogged.compareToIgnoreCase("5") != 0);
 
     }
 
     // Escolher qual atributo alterar do perfil
     public static void perfilMenu(int userID, Jackut jackutApp) {
-        int perfilOp;
+        String opcaoLogged;
         do {
             System.out.println("Opções de perfil:");
             System.out.println("0 - Exibir Perfil");
@@ -170,14 +186,18 @@ public class Main {
             System.out.println("10 - Alterar E-MAIL para CONTATO");
             System.out.println("11 - Alterar CELULAR para CONTATO");
             System.out.println("12 - VOLTAR");
-            perfilOp = input.nextInt();
-            input.nextLine();
+            boolean checkString;
+            do {
+                opcaoLogged = input.nextLine();
+                checkString = isStringNumbersOnly(opcaoLogged, opcaoLogged.length());
+                //System.out.println(checkString);
+            } while (checkString == false);
 
-            switch (perfilOp) {
-            case 0: // exibir perfil
+            switch (opcaoLogged) {
+            case "0": // exibir perfil
                 jackutApp.obterPerfilUsuario(userID);
                 break;
-            case 1: // alterar DIA de nascimento
+            case "1": // alterar DIA de nascimento
                 System.out.println("Digite um dia de nascimento (em NÚMERO):");
 
                 int newDay = input.nextInt(); // sem validação no momento...
@@ -185,12 +205,12 @@ public class Main {
 
                 jackutApp.alterarDiaPerfil(newDay, userID);
                 break;
-            case 2: // alterar MÊS
+            case "2": // alterar MÊS
                 System.out.println("Digite um mês de nascimento (em TEXTO):");
                 String newMonth = input.nextLine();
                 jackutApp.alterarMesPerfil(newMonth, userID);
                 break;
-            case 3: // alterar ANO
+            case "3": // alterar ANO
                 System.out.println("Digite um ano de nascimento (em NÚMERO):");
 
                 int newYear = input.nextInt(); // sem validação no momento...
@@ -198,48 +218,48 @@ public class Main {
 
                 jackutApp.alterarAnoPerfil(newYear, userID);
                 break;
-            case 4: // alterar GÊNERO/SEXO
+            case "4": // alterar GÊNERO/SEXO
                 System.out.println("Digite seu sexo (em TEXTO):");
                 String newGender = input.nextLine();
                 jackutApp.alterarGeneroPerfil(newGender, userID);
                 break;
-            case 5: // alterar CIDADE DE RESIDÊNCIA
+            case "5": // alterar CIDADE DE RESIDÊNCIA
                 System.out.println("Digite sua cidade de residência (em TEXTO):");
                 String newCity = input.nextLine();
                 jackutApp.alterarCidadeAtualPerfil(newCity, userID);
                 break;
-            case 6: // alterar ESTADO CIVIL
+            case "6": // alterar ESTADO CIVIL
                 System.out.println("Digite seu estado civil (em TEXTO):");
                 String newCivil = input.nextLine();
                 jackutApp.alterarEstadoCivilPerfil(newCivil, userID);
                 break;
-            case 7: // alterar ENSINO MÉDIO
+            case "7": // alterar ENSINO MÉDIO
                 System.out.println("Digite onde estuda/estudou o ensino médio (em TEXTO):");
                 String newHighSchool = input.nextLine();
                 jackutApp.alterarEnsinoMedioPerfil(newHighSchool, userID);
                 break;
-            case 8: // alterar FACULDADE
+            case "8": // alterar FACULDADE
                 System.out.println("Digite onde estuda/estudou o ensino superior (em TEXTO):");
                 String newUni = input.nextLine();
                 jackutApp.alterarFaculdadePerfil(newUni, userID);
                 break;
-            case 9: // alterar TRABALHO
+            case "9": // alterar TRABALHO
                 System.out.println("Digite sua profissão/trabalho (em TEXTO):");
                 String newJob = input.nextLine();
                 jackutApp.alterarTrabalhoPerfil(newJob, userID);
                 break;
-            case 10: // alterar EMAIL
+            case "10": // alterar EMAIL
                 System.out.println("Digite seu e-mail para contato (em TEXTO):");
                 String newEmailAddress = input.nextLine();
                 jackutApp.alterarEmailPerfil(newEmailAddress, userID);
                 break;
-            case 11: // alterar CELULAR
+            case "11": // alterar CELULAR
                 System.out.println("Digite seu número de celular para contato");
                 System.out.println("(pode ter espaço incluir '+' antes da região e '-' entre números):");
                 String newPhone = input.nextLine();
                 jackutApp.alterarCelularPerfil(newPhone, userID);
                 break;
-            case 12:
+            case "12":
                 System.out.println("Voltando...");
                 break;
             default:
@@ -247,7 +267,7 @@ public class Main {
 
             }
 
-        } while (perfilOp != 12);
+        } while (opcaoLogged.compareToIgnoreCase("12") != 0);
 
     }
 

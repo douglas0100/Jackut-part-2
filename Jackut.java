@@ -19,7 +19,7 @@ public class Jackut {
                     break;
                 }
             }
-            
+
         }
         return isNew;
 
@@ -28,10 +28,9 @@ public class Jackut {
     public int obterEnderecoUsuario(String login, String password) {
         if (!isEmpty()) {
             for (int i = 0; i < indice; i++) {
-                if (listaDeContas[i].getLogin().equals(login)) {
-                    if (listaDeContas[i].getSenha().equals(password)) {
-                        return i; //informação correta
-                    }
+                if (listaDeContas[i].getLogin().equals(login) && 
+                            listaDeContas[i].getSenha().equals(password)) {
+                    return i; // informação correta
                 }
             }
         }
@@ -43,22 +42,10 @@ public class Jackut {
     }
 
     public void obterPerfilUsuario(int id) {
-        System.out.println("Perfil de " + listaDeContas[id].getNome());
-        System.out.println("******Informações Básicas******");
-        System.out.println("Nascimento: " + listaDeContas[id].getDiaNascimento() + 
-            " de " + listaDeContas[id].getMesNascimento() + " de "+ 
-                listaDeContas[id].getAnoNascimento());
-        System.out.println("Sexo: " + listaDeContas[id].getGenero());    
-        System.out.println("******Status Atual******");
-        System.out.println("Cidade de Residência: " + listaDeContas[id].getCidadeAtual());
-        System.out.println("Estado Civil: " + listaDeContas[id].getEstadoCivil());
-        System.out.println("******Informações Profissionais******");
-        System.out.println("Instituição do Ensino Médio: " + listaDeContas[id].getInstituicaoEnsinoMedio());
-        System.out.println("Instituição de Ensino Superior: " + listaDeContas[id].getInstituicaoFaculdade());
-        System.out.println("Trabalha em: " + listaDeContas[id].getOcupacaoTrabalho());
-        System.out.println("******Contato******");
-        System.out.println("E-Mail: " + listaDeContas[id].getContatoEmail());
-        System.out.println("Celular: " + listaDeContas[id].getContatoCelular());
+        System.out.println(listaDeContas[id].InfoBasicaToString());
+        System.out.println(listaDeContas[id].StatusAtualToString());
+        System.out.println(listaDeContas[id].InfoProfissionToString());
+        System.out.println(listaDeContas[id].ContatoToString());
     }
 
     public void alterarDiaPerfil(int dia, int id) {
