@@ -113,5 +113,13 @@ public class Jackut {
     public int getIndice() {
         return indice;
     }
-
+    
+    //---------------------------------------------------------
+    
+    
+    public Conta getConta(int id){
+        return this.listaDeContas[id];
+    }
+    
+    //---------------------------------------------------------
 }

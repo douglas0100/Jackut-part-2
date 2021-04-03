@@ -1,4 +1,3 @@
-
 import java.util.Scanner;
 
 public class Main {
@@ -129,9 +128,8 @@ public class Main {
             System.out.println("Bem vindo/a de volta," + jackutApp.obterNomeUsuario(userID));
             System.out.println("1 - Editar Perfil");
             System.out.println("2 - Adicionar Amigos");
-            System.out.println("3 - Enviar uma Mensagem");
-            System.out.println("4 - Ler Mensagens");
-            System.out.println("5 - Logout");
+            System.out.println("3 - Chat");
+            System.out.println("4 - Logout");
             boolean checkString;
             do {
                 opcaoLogged = input.nextLine();
@@ -150,21 +148,17 @@ public class Main {
                 System.out.println("NÃO IMPLEMENTADO");
                 break;
             case "3":
-                System.out.println("Enviar mensagem");
-                System.out.println("NÃO IMPLEMENTADO");
+                // Chat
+                chat(userID, jackutApp);
                 break;
             case "4":
-                System.out.println("Ler mensagens");
-                System.out.println("NÃO IMPLEMENTADO");
-                break;
-            case "5":
                 System.out.println("Fazendo logout...");
                 break;
             default:
                 break;
             }
 
-        } while (opcaoLogged.compareToIgnoreCase("5") != 0);
+        } while (opcaoLogged.compareToIgnoreCase("4") != 0);
 
     }
 
@@ -270,6 +264,112 @@ public class Main {
         } while (opcaoLogged.compareToIgnoreCase("12") != 0);
 
     }
+    
+    
+    // Funções e Procedimentos Editados por Douglas Leite
+    //---------------------------------------------------------
+    
+    /* O Procedimento Chat contem um menu de seleção
+    com 3 opções disponiveis */
+    
+    public static void chat(int userID, Jackut jackutApp) {
+        String opc = null;
+        do {
+            System.out.format("---- Jackut Chat ----%n"
+                    + "Selecione uma opção %n"
+                    + "1 - Caixa de entrada %n"
+                    + "2 - Nova Mensagem %n"
+                    + "3 - Voltar ao menu de usuario %n"
+                    + "Digite: ");
+            opc = checkString(opc);
+            switch (opc) {
+                case "1":
+                    caixaDeEntrada(userID, jackutApp);
+                    break;
+                case "2":
+                    novaMensagem(userID, jackutApp);
+                    break;
+                case "3":
+                    System.out.format("voltando ao menu... %n");
+            }
+        } while (opc.compareToIgnoreCase("3") != 0);
+    }
+    
+    /* O Procedimento caixa de entrada verifica se há mensagens dentro
+    do repositorio "caixa de entrada" na classe Conta, a partir do indice 
+    do usuario "userID". Caso o indice seja maior que zero, sera impresso
+    todas as mensagens que estão no repositorio. */
+    
+    public static void caixaDeEntrada(int userID, Jackut jackutApp) {
+        if (jackutApp.getConta(userID).getQtdMensagens() == 0) {
+            System.out.format("Caixa de entrada vazia! %n");
+        } else {
+            for (int i = 0; i < jackutApp.getConta(userID).getQtdMensagens(); i = i + 1) {
+                System.out.format("%n %s %n", jackutApp.getConta(userID).getCaixaDeEntrada(i));
+            }
+        }
+    }
+    
+    /* O procedimento nova mensagem recebe o nome do destinatario 
+    como paramentro e atravéz da comparação entre nomes de usuarios,
+    feita pelo função "buscar id pelo nome", verifica se o mesmo é valido.
+    Após a validação, é criado um objeto da classe Chat "mensagem", que vai
+    ser armazenado dentro do repositorio de contas do destinatario. */
+
+    public static void novaMensagem(int userID, Jackut jackutApp) {
+        String opc;
+        do {
+            Chat mensagem;
+            System.out.format("Login do destinatario %n"
+                    + "Digite: ");
+            String login = input.nextLine();
+            int posicao = buscarIdPeloLogin(jackutApp, login);
+            if (posicao == -1) {
+                while (posicao == -1) {
+                    System.out.format("Nome invalido! %n");
+                    login = input.nextLine();
+                    posicao = buscarIdPeloLogin(jackutApp, login);
+                }
+            } else {
+                System.out.format("Mensagem %n"
+                        + "Digite: ");
+                String desc = input.nextLine();
+                login = jackutApp.getConta(userID).getLogin();
+                mensagem = new Chat(login, desc);
+                jackutApp.getConta(posicao).enviaMensagem(mensagem);
+                System.out.format("Mensagem enviada! %n");
+            }
+            System.out.format("Gostaria de enviar uma nova mensagem? %n"
+                    + "1 - Sim %n"
+                    + "2 - Não %n"
+                    + "Digite: ");
+            opc = input.nextLine();
+        } while (opc.compareToIgnoreCase("2") != 0);
+    }
+
+    public static int buscarIdPeloLogin(Jackut jackutApp, String login) {
+        for (int i = 0; i < jackutApp.getIndice(); i = i + 1) {
+            if (jackutApp.getConta(i).getLogin().equals(login)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    
+    public static String checkString(String opc) {
+        boolean check;
+        do {
+            opc = input.nextLine();
+            check = isStringNumbersOnly(opc, opc.length());
+        } while (check == false);
+        return opc;
+    }
+    
+    //---------------------------------------------------------
+    
+    
+    
+    
 
     public static void main(String[] args) {
         Jackut jackutApp = new Jackut();

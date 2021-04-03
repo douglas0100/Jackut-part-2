@@ -1,7 +1,11 @@
 public class Conta {
+    
+    
     private String nome;
     private String login;
     private String senha;
+    private Chat[] caixaDeEntrada;
+    private int qtdMensagens;
     //atributos abaixo são de perfil, deviam ser movidas para outra classe depois talvez
     //---------------------------------------
     //Informações básicas
@@ -28,7 +32,27 @@ public class Conta {
         this.nome = nome;
         this.login = login;
         this.senha = senha;
+        this.caixaDeEntrada = new Chat[100];
+        this.qtdMensagens = 0;
     }
+    
+    
+    
+    //-----------------------------------------------
+    
+    public int getQtdMensagens() {
+        return this.qtdMensagens;
+    }
+ 
+    
+    public Chat getCaixaDeEntrada(int Id) {
+        return this.caixaDeEntrada[Id];
+    }
+    
+    //-----------------------------------------------
+    
+    
+    
     public String getNome() {
         return nome;
     }
@@ -131,6 +155,16 @@ public class Conta {
 
     public void setContatoCelular(String contatoCelular) {
         this.contatoCelular = contatoCelular;
+    }
+    
+    public boolean enviaMensagem(Chat mensagem){
+        boolean retorno = false;
+        if(mensagem != null && this.qtdMensagens < this.caixaDeEntrada.length){
+            this.caixaDeEntrada[this.qtdMensagens] = mensagem;
+            this.qtdMensagens = this.qtdMensagens + 1;
+            retorno = true;
+        }
+        return retorno;
     }
 
     
