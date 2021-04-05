@@ -3,6 +3,7 @@ import java.util.Scanner;
 public class Main {
 
     static Scanner input = new Scanner(System.in);
+    public static final String OPC_INVALIDA = "Opção inválida";
 
     // Menu de opcoes
     public static String menu() {
@@ -16,7 +17,7 @@ public class Main {
             op = input.nextLine();
 
             if (!op.equals("1") && !op.equals("2") && !op.equals("3")) {
-                System.out.println("Opcao invalida!");
+                System.out.println(OPC_INVALIDA);
             }
 
         } while (!op.equals("1") && !op.equals("2") && !op.equals("3"));
@@ -38,7 +39,7 @@ public class Main {
             do {
                 System.out.println("Digite um login.");
                 inputLogin = input.nextLine();
-                isNew = jackutApp.buscarLogin(inputLogin);
+                isNew = jackutApp.isNewLogin(inputLogin);
                 if (!isNew) {
                     System.out.println("Conta ja existe!");
                 }
@@ -60,13 +61,13 @@ public class Main {
 
             break;
         case "2":// Login
-            // System.out.println("Ainda sera implementado");
+
             String loginUserInput;
             String loginPasswordInput;
 
             System.out.println("Digite seu login:");
             loginUserInput = input.nextLine();
-            // isNew = jackutApp.buscarLogin(loginUserInput);
+
             System.out.println("Digite sua senha:");
             loginPasswordInput = input.nextLine();
             int userID = jackutApp.obterEnderecoUsuario(loginUserInput, loginPasswordInput);
@@ -107,17 +108,7 @@ public class Main {
         }
     }
 
-
-    public static boolean isStringNumbersOnly(String opcao, int length) {
-        for (int i = 0; i < length; i++) {
-            if (opcao.charAt(i) >= '0' && opcao.charAt(i) <= '9') {
-                return true;
-            } else {
-                return false;
-            }
-        }
-        return false;
-    }
+    // Codigo isStringNUmberOnly era "Dead code"
 
     // Acesso de menu para usuário
     // Editar perfil, adicionar amigos, enviar mensagens e ler mensagens
@@ -127,15 +118,11 @@ public class Main {
         do {
             System.out.println("Bem vindo/a de volta," + jackutApp.obterNomeUsuario(userID));
             System.out.println("1 - Editar Perfil");
-            System.out.println("2 - Adicionar Amigos");
+            System.out.println("2 - Amigos");
             System.out.println("3 - Chat");
             System.out.println("4 - Logout");
-            boolean checkString;
-            do {
-                opcaoLogged = input.nextLine();
-                checkString = isStringNumbersOnly(opcaoLogged, opcaoLogged.length());
-                System.out.println(checkString);
-            } while (checkString == false);
+            // Nao precisa checar pois o proprio switch default se encarrega disso
+            opcaoLogged = input.nextLine();
 
             switch (opcaoLogged) {
 
@@ -144,8 +131,7 @@ public class Main {
                 perfilMenu(userID, jackutApp);
                 break;
             case "2":
-                System.out.println("Adicionar amigos");
-                System.out.println("NÃO IMPLEMENTADO");
+                amigosMenu(userID, jackutApp);
                 break;
             case "3":
                 // Chat
@@ -155,12 +141,138 @@ public class Main {
                 System.out.println("Fazendo logout...");
                 break;
             default:
+                System.out.println(OPC_INVALIDA);
                 break;
             }
 
         } while (opcaoLogged.compareToIgnoreCase("4") != 0);
 
     }
+
+    // ************************************************************ */
+    // Codigo referente a adicao de amigos
+    public static void amigosMenu(int userID, Jackut jackutApp) {
+        String op;
+        do {
+            System.out.format("Menu de amigos %n" + "1: Adicionar amigos %n" + "2: Convites Pendentes %n"
+                    + "3: Ver amigos %n" + "4: Voltar menu %n");
+
+            op = input.nextLine();
+            switch (op) {
+            case "1":
+                addAmigos(userID, jackutApp);
+                break;
+            case "2":
+                convitesPendentes(userID, jackutApp);
+
+                break;
+            case "3":
+                listaDeAmigos(userID, jackutApp);
+
+                break;
+            case "4":
+                System.out.println("Voltando ao menu principal...");
+                break;
+            default:
+                break;
+            }
+        } while (!op.equals("4"));
+
+    }
+
+    public static void addAmigos(int userID, Jackut jackutApp) {
+        String loginBuscado;
+        System.out.println("Digite o login do usuario a ser adicionado.");
+        loginBuscado = input.nextLine();
+
+        if (jackutApp.isALogin(loginBuscado)) {// Se existe login do usuario
+            if (!jackutApp.getConta(userID).isNewInvite(loginBuscado)) {// O usuario requerente ja fez pedido?
+                System.out.println("Pedido de amizade ja existe!");
+            } else {
+                int indiceContaReceptora = jackutApp.obterIndiceDeUsuario(loginBuscado);// Pegamos o indice da conta que
+                                                                                        // recebe convite
+                Conta contaReceptora = jackutApp.getConta(indiceContaReceptora); // Pega conta receptora do convite
+                jackutApp.getConta(userID).solicitarAmizade(contaReceptora);
+                System.out.println("Solicitacao de amizade enviada!");
+            }
+        } else {
+            System.out.println("Usuario inexistente!");
+        }
+    }
+
+    public static void convitesPendentes(int userID, Jackut jackutApp) {
+        int indiceDeConvitesRecebidos = jackutApp.getConta(userID).getIndiceDeConvitesRecebidos();
+        String[] listaDeConvitesRecebidos = jackutApp.getConta(userID).getConvitesRecebidos();
+
+        if (indiceDeConvitesRecebidos != 0) {
+            for (int i = 0; i < indiceDeConvitesRecebidos; i++) {
+                System.out.println("Convite [" + (i + 1) + "]:");
+                System.out.println("O usuario " + listaDeConvitesRecebidos[i] + " quer ser seu amigo.");
+            }
+            menuConvitesPendentes(userID, jackutApp, indiceDeConvitesRecebidos);
+
+        } else {
+            System.out.println("Não há convites pendentes!");
+        }
+
+    }
+
+    public static void menuConvitesPendentes(int userID, Jackut jackutApp, int indiceDeConvitesRecebidos) {
+        String op;
+        
+        do {
+
+            System.out.format("Deseja aceitar algum convite?" + "%n1: Sim" + "%n2: Nao %n");
+            op = input.nextLine();
+
+            switch (op) {
+            case "1":
+                System.out.println("Digite o login do usuario a ser aceitado");
+                String adicionarLogin = input.nextLine();
+
+                int amigoID = jackutApp.obterIndiceDeUsuario(adicionarLogin);
+                Conta novoAmigo = jackutApp.getConta(amigoID);
+
+                boolean isAFriendNow = jackutApp.getConta(userID).aceitarAmizade(novoAmigo);
+                
+                if (isAFriendNow) {
+                    System.out.println("Contato adicionado!");
+                    indiceDeConvitesRecebidos = jackutApp.getConta(userID).getIndiceDeConvitesRecebidos();
+                } else {
+                    System.out.println("Nao tem solicitacao de amizade desse usuario!");
+                }
+                break;
+            case "2":
+                break;
+            default:
+                System.out.println(OPC_INVALIDA);
+                break;
+            }
+            if (indiceDeConvitesRecebidos == 0) {
+                op = "2";
+                System.out.println("Não há mais convites pendentes!");
+            }
+            System.out.println("Valor op: " +op);
+            System.out.println("Valor de indice: " + indiceDeConvitesRecebidos);
+        } while (!op.equals("2"));
+    }
+
+    public static void listaDeAmigos(int userID, Jackut jackutApp) {
+        Conta contaTemp = jackutApp.getConta(userID);
+        int indiceDeAmigos = contaTemp.getIndiceDeAmigos();
+        if (indiceDeAmigos != 0) {
+
+            for (int i = 0; i < indiceDeAmigos; i++) {
+                System.out.println("\tAmigo[1]:");
+                System.out.println(contaTemp.getAmigo(i));
+                System.out.println("-------------------------------------");
+            }
+        } else {
+            System.out.println("Voce não tem amigos.");
+        }
+
+    }
+    // ************************************************************ */
 
     // Escolher qual atributo alterar do perfil
     public static void perfilMenu(int userID, Jackut jackutApp) {
@@ -180,12 +292,8 @@ public class Main {
             System.out.println("10 - Alterar E-MAIL para CONTATO");
             System.out.println("11 - Alterar CELULAR para CONTATO");
             System.out.println("12 - VOLTAR");
-            boolean checkString;
-            do {
-                opcaoLogged = input.nextLine();
-                checkString = isStringNumbersOnly(opcaoLogged, opcaoLogged.length());
-                //System.out.println(checkString);
-            } while (checkString == false);
+            // Switch default encarrega da chegagem
+            opcaoLogged = input.nextLine();
 
             switch (opcaoLogged) {
             case "0": // exibir perfil
@@ -257,6 +365,7 @@ public class Main {
                 System.out.println("Voltando...");
                 break;
             default:
+                System.out.println(OPC_INVALIDA);
                 break;
 
             }
@@ -264,42 +373,45 @@ public class Main {
         } while (opcaoLogged.compareToIgnoreCase("12") != 0);
 
     }
-    
-    
+
     // Funções e Procedimentos Editados por Douglas Leite
-    //---------------------------------------------------------
-    
-    /* O Procedimento Chat contem um menu de seleção
-    com 3 opções disponiveis */
-    
+    // ---------------------------------------------------------
+
+    /*
+     * O Procedimento Chat contem um menu de seleção com 3 opções disponiveis
+     */
+
     public static void chat(int userID, Jackut jackutApp) {
         String opc = null;
         do {
-            System.out.format("---- Jackut Chat ----%n"
-                    + "Selecione uma opção %n"
-                    + "1 - Caixa de entrada %n"
-                    + "2 - Nova Mensagem %n"
-                    + "3 - Voltar ao menu de usuario %n"
-                    + "Digite: ");
-            opc = checkString(opc);
+            System.out.format("---- Jackut Chat ----%n" + "Selecione uma opção %n" + "1 - Caixa de entrada %n"
+                    + "2 - Nova Mensagem %n" + "3 - Voltar ao menu de usuario %n");
+            opc = input.nextLine();
+
             switch (opc) {
-                case "1":
-                    caixaDeEntrada(userID, jackutApp);
-                    break;
-                case "2":
-                    novaMensagem(userID, jackutApp);
-                    break;
-                case "3":
-                    System.out.format("voltando ao menu... %n");
+            case "1":
+                caixaDeEntrada(userID, jackutApp);
+                break;
+            case "2":
+                novaMensagem(userID, jackutApp);
+                break;
+            case "3":
+                System.out.format("voltando ao menu... %n");
+                break;
+            default:
+                System.out.println(OPC_INVALIDA);
+                break;
             }
         } while (opc.compareToIgnoreCase("3") != 0);
     }
-    
-    /* O Procedimento caixa de entrada verifica se há mensagens dentro
-    do repositorio "caixa de entrada" na classe Conta, a partir do indice 
-    do usuario "userID". Caso o indice seja maior que zero, sera impresso
-    todas as mensagens que estão no repositorio. */
-    
+
+    /*
+     * O Procedimento caixa de entrada verifica se há mensagens dentro do
+     * repositorio "caixa de entrada" na classe Conta, a partir do indice do usuario
+     * "userID". Caso o indice seja maior que zero, sera impresso todas as mensagens
+     * que estão no repositorio.
+     */
+
     public static void caixaDeEntrada(int userID, Jackut jackutApp) {
         if (jackutApp.getConta(userID).getQtdMensagens() == 0) {
             System.out.format("Caixa de entrada vazia! %n");
@@ -309,19 +421,20 @@ public class Main {
             }
         }
     }
-    
-    /* O procedimento nova mensagem recebe o nome do destinatario 
-    como paramentro e atravéz da comparação entre nomes de usuarios,
-    feita pelo função "buscar id pelo nome", verifica se o mesmo é valido.
-    Após a validação, é criado um objeto da classe Chat "mensagem", que vai
-    ser armazenado dentro do repositorio de contas do destinatario. */
+
+    /*
+     * O procedimento nova mensagem recebe o nome do destinatario como paramentro e
+     * atravéz da comparação entre nomes de usuarios, feita pelo função
+     * "buscar id pelo nome", verifica se o mesmo é valido. Após a validação, é
+     * criado um objeto da classe Chat "mensagem", que vai ser armazenado dentro do
+     * repositorio de contas do destinatario.
+     */
 
     public static void novaMensagem(int userID, Jackut jackutApp) {
         String opc;
         do {
             Chat mensagem;
-            System.out.format("Login do destinatario %n"
-                    + "Digite: ");
+            System.out.format("Login do destinatario %n");
             String login = input.nextLine();
             int posicao = buscarIdPeloLogin(jackutApp, login);
             if (posicao == -1) {
@@ -331,18 +444,14 @@ public class Main {
                     posicao = buscarIdPeloLogin(jackutApp, login);
                 }
             } else {
-                System.out.format("Mensagem %n"
-                        + "Digite: ");
+                System.out.format("Mensagem %n" + "Digite: ");
                 String desc = input.nextLine();
                 login = jackutApp.getConta(userID).getLogin();
                 mensagem = new Chat(login, desc);
                 jackutApp.getConta(posicao).enviaMensagem(mensagem);
                 System.out.format("Mensagem enviada! %n");
             }
-            System.out.format("Gostaria de enviar uma nova mensagem? %n"
-                    + "1 - Sim %n"
-                    + "2 - Não %n"
-                    + "Digite: ");
+            System.out.format("Gostaria de enviar uma nova mensagem? %n" + "1 - Sim %n" + "2 - Não %n" + "Digite: ");
             opc = input.nextLine();
         } while (opc.compareToIgnoreCase("2") != 0);
     }
@@ -355,21 +464,10 @@ public class Main {
         }
         return -1;
     }
-    
-    public static String checkString(String opc) {
-        boolean check;
-        do {
-            opc = input.nextLine();
-            check = isStringNumbersOnly(opc, opc.length());
-        } while (check == false);
-        return opc;
-    }
-    
-    //---------------------------------------------------------
-    
-    
-    
-    
+    // "Nao eh necessario o checkString pq o switch default se encarrega da opcao
+    // invalida e o dowhile obriga uma opcao valida"
+
+    // ---------------------------------------------------------
 
     public static void main(String[] args) {
         Jackut jackutApp = new Jackut();
