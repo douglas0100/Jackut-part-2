@@ -252,8 +252,7 @@ public class Main {
                 op = "2";
                 System.out.println("Não há mais convites pendentes!");
             }
-            System.out.println("Valor op: " +op);
-            System.out.println("Valor de indice: " + indiceDeConvitesRecebidos);
+
         } while (!op.equals("2"));
     }
 

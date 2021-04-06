@@ -107,10 +107,6 @@ public class Conta {
 
             // Procura o convite do amigo em "convitesRecebidos"
             for (int i = 0; i < indiceDeConvitesRecebidos; i++) {
-<<<<<<< HEAD
-=======
-                System.out.println("indiceDeConvitesRecebidos: " + indiceDeConvitesRecebidos);
->>>>>>> b959be13177ef1942f7016b860a3e8006e31128c
                 if (convitesRecebidos[i].equals(novoAmigo.getLogin())) {
                     organizarConvitesRecebidos(i, indiceDeConvitesRecebidos);
                     indiceDeConvitesRecebidos--;
@@ -125,7 +121,6 @@ public class Conta {
     // Remove o convite da posicao indice e coloca os convites das posicoes
     // posteriores uma posicao antes
     public void organizarConvitesRecebidos(int indice, int tamDeConvites) {
-<<<<<<< HEAD
         if (indice == 0) {
             convitesRecebidos[indice] = null;
         } else if (indice == TAM) {
@@ -134,19 +129,12 @@ public class Conta {
             for (int i = indice + 1; i < tamDeConvites; i++) {
                 convitesRecebidos[i - 1] = convitesRecebidos[i];
             }
-=======
-
-        for (int i = indice; i < tamDeConvites; i++) {
-            System.out.println("orgConEnvRecebidos-convitesRecebidos ");
-            convitesRecebidos[indice - 1] = convitesRecebidos[indice];
->>>>>>> b959be13177ef1942f7016b860a3e8006e31128c
         }
 
     }
 
     // Semelhante a organizarConvitesRecebidos, porem na conta de quem enviou
     public void organizarConvitesEnviadosDoAmigo(Conta novoAmigo) {
-<<<<<<< HEAD
         int indiceDeConvitesEnviadosAmigo = novoAmigo.getIndiceDeConvitesEnviados();
         String[] convitesEnviadosDeAmigos = novoAmigo.getConvitesEnviados();
 
@@ -165,19 +153,6 @@ public class Conta {
             }
         }
 
-=======
-        int indice = novoAmigo.getIndiceDeConvitesEnviados();
-        String[] convitesEnviadosDeAmigos = novoAmigo.getConvitesEnviados();
-
-        for (int i = 0; i < indice; i++) {
-            
-            if (convitesEnviadosDeAmigos[i].equals(login)) {
-                for (int j = i ; j < convitesEnviadosDeAmigos.length; j++) {
-                    novoAmigo.setConviteEnviado(j - 1, convitesEnviadosDeAmigos[j]);
-                }
-            }
-        }
->>>>>>> b959be13177ef1942f7016b860a3e8006e31128c
     }
 
     public boolean enviaMensagem(Chat mensagem) {
