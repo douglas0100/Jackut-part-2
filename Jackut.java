@@ -10,7 +10,7 @@ public class Jackut {
         return (indice == 0);
     }
 
-    public boolean buscarLogin(String login) {
+    public boolean isNewLogin(String login) {// Antigo nome buscarLogin estava causando confusao.
         boolean isNew = true; // login é novo?
         if (!isEmpty()) {
             for (int i = 0; i < indice; i++) {
@@ -25,6 +25,31 @@ public class Jackut {
 
     }
 
+    public boolean isALogin(String login){// O mesmo que isNewLogin porem com retorno inverso
+
+        boolean isALogin = false;
+        if(!isEmpty()){
+            for(int i = 0; i < indice; i++){
+                if(listaDeContas[i].getLogin().equals(login)){
+                    isALogin = true;
+                    break;
+                }
+            }
+        }
+        return isALogin;
+    }
+
+    public int obterIndiceDeUsuario(String login){// Só usar esse método se já souber que existe contas em Jackut.
+        int anyUserID = -1;
+        for (int i = 0; i < indice; i++) {
+            if(listaDeContas[i].getLogin().equals(login)){
+                anyUserID = i;
+                break;
+            }
+        }
+        return anyUserID;
+        
+    }
     public int obterEnderecoUsuario(String login, String password) {
         if (!isEmpty()) {
             for (int i = 0; i < indice; i++) {
@@ -41,11 +66,37 @@ public class Jackut {
         return listaDeContas[id].getNome();
     }
 
+    public Conta[] getListaDeContas() {
+        return listaDeContas;
+    }
+
+    public int getIndice() {
+        return indice;
+    }
+    public Conta getConta(int id){
+        return this.listaDeContas[id];
+    }
+
+    public boolean criarConta(Conta novaConta) {
+        boolean isAdded = false; // Se foi adicionado
+
+        if (indice < TAM) {
+            listaDeContas[indice] = novaConta;
+            indice++;
+            isAdded = true;
+        } else {
+            isAdded = false;
+        }
+        return isAdded;
+
+    }
+
+    // ----------------------- Metodos de perfil -------------------------
     public void obterPerfilUsuario(int id) {
-        System.out.println(listaDeContas[id].InfoBasicaToString());
-        System.out.println(listaDeContas[id].StatusAtualToString());
-        System.out.println(listaDeContas[id].InfoProfissionToString());
-        System.out.println(listaDeContas[id].ContatoToString());
+        System.out.println(listaDeContas[id].infoBasicaToString());
+        System.out.println(listaDeContas[id].statusAtualToString());
+        System.out.println(listaDeContas[id].infoProfissionToString());
+        System.out.println(listaDeContas[id].contatoToString());
     }
 
     public void alterarDiaPerfil(int dia, int id) {
@@ -92,26 +143,6 @@ public class Jackut {
         listaDeContas[id].setContatoCelular(celular);
     }
 
-    public boolean criarConta(Conta novaConta) {
-        boolean isAdded = false; // Se foi adicionado
 
-        if (indice < TAM) {
-            listaDeContas[indice] = novaConta;
-            indice++;
-            isAdded = true;
-        } else {
-            isAdded = false;
-        }
-        return isAdded;
-
-    }
-
-    public Conta[] getListaDeContas() {
-        return listaDeContas;
-    }
-
-    public int getIndice() {
-        return indice;
-    }
-
+//-------------------------------------------------------------------------------------
 }
