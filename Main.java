@@ -432,7 +432,7 @@ public class Main {
     public static void novaMensagem(int userID, Jackut jackutApp) {
         String opc;
         do {
-            Chat mensagem;
+            Mensagem mensagem;
             System.out.format("Login do destinatario %n");
             String login = input.nextLine();
             int posicao = buscarIdPeloLogin(jackutApp, login);
@@ -446,7 +446,7 @@ public class Main {
                 System.out.format("Mensagem %n" + "Digite: ");
                 String desc = input.nextLine();
                 login = jackutApp.getConta(userID).getLogin();
-                mensagem = new Chat(login, desc);
+                mensagem = new Mensagem(login, desc);
                 jackutApp.getConta(posicao).enviaMensagem(mensagem);
                 System.out.format("Mensagem enviada! %n");
             }
@@ -483,3 +483,4 @@ public class Main {
     }
 
 }
+

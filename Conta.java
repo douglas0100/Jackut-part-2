@@ -5,7 +5,7 @@ public class Conta {
     private String nome;
     private String login;
     private String senha;
-    private Chat[] caixaDeEntrada;
+    private Mensagem[] caixaDeEntrada;
 
     private String[] convitesEnviados;
     private String[] convitesRecebidos;
@@ -44,7 +44,7 @@ public class Conta {
         this.nome = nome;
         this.login = login;
         this.senha = senha;
-        this.caixaDeEntrada = new Chat[TAM];
+        this.caixaDeEntrada = new Mensagem[TAM];
 
         this.convitesEnviados = new String[TAM];
         this.convitesRecebidos = new String[TAM];
@@ -155,7 +155,7 @@ public class Conta {
 
     }
 
-    public boolean enviaMensagem(Chat mensagem) {
+    public boolean enviaMensagem(Mensagem mensagem) {
         boolean retorno = false;
         if (mensagem != null && this.qtdMensagens < this.caixaDeEntrada.length) {
             this.caixaDeEntrada[this.qtdMensagens] = mensagem;
@@ -205,7 +205,7 @@ public class Conta {
         return this.qtdMensagens;
     }
 
-    public Chat getCaixaDeEntrada(int id) {
+    public Mensagem getCaixaDeEntrada(int id) {
         return this.caixaDeEntrada[id];
     }
 

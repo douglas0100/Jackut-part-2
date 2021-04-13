@@ -1,20 +1,19 @@
-public class Chat {
+public class Mensagem {
     private int id;
     private String login;
-    private String mensagem;
+    private String descricao;
 
-    public Chat(){// Construtor padrao necessario pra criacao do filho?
+    public Mensagem(){
+        // Construtor padrao necessario pra criacao do filho?
 
     }
     
-    public Chat(String login, String mensagem){
+    public Mensagem(String login, String descricao){
         this.login = login;
-        this.mensagem = mensagem;
+        this.descricao = descricao;
         this.id = 0;
     }
   
-
-    
     public int getId(){
         return this.id;
     }
@@ -33,7 +32,7 @@ public class Chat {
                 + "Mensagem de %s %n"
                 + "Conteudo: %s %n"
                 + "------------- %n", this.login,
-                this.mensagem);
+                this.descricao);
     }
     
     
