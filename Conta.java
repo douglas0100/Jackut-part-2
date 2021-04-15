@@ -17,6 +17,8 @@ public class Conta {
     private int indiceDeAmigos;
 
     private int qtdMensagens;
+
+    
     // atributos abaixo são de perfil, deviam ser movidas para outra classe depois
     // talvez
     // ---------------------------------------
@@ -53,6 +55,7 @@ public class Conta {
     }
 
     // ------------------ Metodos -----------------------------
+    
     public boolean isNewInvite(String login) {
         boolean isNewInvite = true;
         if (indiceDeConvitesEnviados != 0) {
@@ -108,7 +111,7 @@ public class Conta {
             // Procura o convite do amigo em "convitesRecebidos"
             for (int i = 0; i < indiceDeConvitesRecebidos; i++) {
                 if (convitesRecebidos[i].equals(novoAmigo.getLogin())) {
-                    organizarConvitesRecebidos(i, indiceDeConvitesRecebidos);
+                    organizarConvitesRecebidos(i);
                     indiceDeConvitesRecebidos--;
                     organizarConvitesEnviadosDoAmigo(novoAmigo);
                     novoAmigo.setIndiceDeConvitesEnviados(novoAmigo.getIndiceDeConvitesEnviados() - 1);
@@ -120,15 +123,16 @@ public class Conta {
 
     // Remove o convite da posicao indice e coloca os convites das posicoes
     // posteriores uma posicao antes
-    public void organizarConvitesRecebidos(int indice, int tamDeConvites) {
+    public void organizarConvitesRecebidos(int indice) {
         if (indice == 0) {
             convitesRecebidos[indice] = null;
         } else if (indice == TAM) {
             convitesRecebidos[indice] = null;
         } else {
-            for (int i = indice + 1; i < tamDeConvites; i++) {
+            for (int i = indice + 1; i < indiceDeConvitesRecebidos; i++) {
                 convitesRecebidos[i - 1] = convitesRecebidos[i];
             }
+            convitesRecebidos[indiceDeConvitesRecebidos] = null;
         }
 
     }
@@ -149,6 +153,7 @@ public class Conta {
                     for (int j = (i + 1); j < indiceDeConvitesEnviadosAmigo; j++) {
                         novoAmigo.setConviteEnviado(j - 1, convitesEnviadosDeAmigos[j]);
                     }
+                    novoAmigo.setConviteEnviado(indiceDeConvitesEnviadosAmigo, null);
                 }
             }
         }

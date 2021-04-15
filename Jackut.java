@@ -25,12 +25,12 @@ public class Jackut {
 
     }
 
-    public boolean isALogin(String login){// O mesmo que isNewLogin porem com retorno inverso
+    public boolean isALogin(String login) {// O mesmo que isNewLogin porem com retorno inverso
 
         boolean isALogin = false;
-        if(!isEmpty()){
-            for(int i = 0; i < indice; i++){
-                if(listaDeContas[i].getLogin().equals(login)){
+        if (!isEmpty()) {
+            for (int i = 0; i < indice; i++) {
+                if (listaDeContas[i].getLogin().equals(login)) {
                     isALogin = true;
                     break;
                 }
@@ -39,22 +39,22 @@ public class Jackut {
         return isALogin;
     }
 
-    public int obterIndiceDeUsuario(String login){// Só usar esse método se já souber que existe contas em Jackut.
+    public int obterIndiceDeUsuario(String login) {// Só usar esse método se já souber que existe contas em Jackut.
         int anyUserID = -1;
         for (int i = 0; i < indice; i++) {
-            if(listaDeContas[i].getLogin().equals(login)){
+            if (listaDeContas[i].getLogin().equals(login)) {
                 anyUserID = i;
                 break;
             }
         }
         return anyUserID;
-        
+
     }
+
     public int obterEnderecoUsuario(String login, String password) {
         if (!isEmpty()) {
             for (int i = 0; i < indice; i++) {
-                if (listaDeContas[i].getLogin().equals(login) && 
-                            listaDeContas[i].getSenha().equals(password)) {
+                if (listaDeContas[i].getLogin().equals(login) && listaDeContas[i].getSenha().equals(password)) {
                     return i; // informação correta
                 }
             }
@@ -64,17 +64,6 @@ public class Jackut {
 
     public String obterNomeUsuario(int id) {
         return listaDeContas[id].getNome();
-    }
-
-    public Conta[] getListaDeContas() {
-        return listaDeContas;
-    }
-
-    public int getIndice() {
-        return indice;
-    }
-    public Conta getConta(int id){
-        return this.listaDeContas[id];
     }
 
     public boolean criarConta(Conta novaConta) {
@@ -89,6 +78,45 @@ public class Jackut {
         }
         return isAdded;
 
+    }
+
+
+    public boolean criarContaAdmin(ContaAdmin novaConta) {
+        boolean isAdded = false; // Se foi adicionado
+
+        if (indice < TAM) {
+            listaDeContas[indice] = novaConta;
+            indice++;
+            isAdded = true;
+        } else {
+            isAdded = false;
+        }
+        return isAdded;
+    }
+
+    public boolean removerConta(String login) {
+        int indiceDoUsuario = obterIndiceDeUsuario(login);
+
+        for (int i = indiceDoUsuario; i < (indice-1); i++) {
+            listaDeContas[i] = listaDeContas[i+1];
+        }
+        listaDeContas[indice] = null;
+        indice--;
+        return true;
+    }
+
+
+    // ----------------------- Gets -----------------------
+    public Conta[] getListaDeContas() {
+        return listaDeContas;
+    }
+
+    public int getIndice() {
+        return indice;
+    }
+
+    public Conta getConta(int id) {
+        return this.listaDeContas[id];
     }
 
     // ----------------------- Metodos de perfil -------------------------
@@ -143,6 +171,5 @@ public class Jackut {
         listaDeContas[id].setContatoCelular(celular);
     }
 
-
-//-------------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------------
 }
