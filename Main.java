@@ -8,6 +8,7 @@ public class Main {
     // Menu de opcoes
     public static String menu() {
         String op;
+        boolean isValidOption = false;
         do {
 
             System.out.println("Escolha uma opcao");
@@ -16,11 +17,23 @@ public class Main {
             System.out.println("3: Sair");
             op = input.nextLine();
 
-            if (!op.equals("1") && !op.equals("2") && !op.equals("3")) {
+            switch (op) {
+            case "1":
+                isValidOption = true;
+                break;
+            case "2":
+                isValidOption = true;
+                break;
+            case "3":
+                isValidOption = true;
+                break;
+
+            default:
                 System.out.println(OPC_INVALIDA);
+                break;
             }
 
-        } while (!op.equals("1") && !op.equals("2") && !op.equals("3"));
+        } while (!isValidOption);
 
         return op;
     }
@@ -30,35 +43,7 @@ public class Main {
         switch (op) {
 
         case "1":// Criar conta
-            boolean isNew = false; // Se é novo o login
-            boolean isCreated = false;
-            String inputLogin;
-            String inputSenha;
-            String inputNome;
-
-            do {
-                System.out.println("Digite um login.");
-                inputLogin = input.nextLine();
-                isNew = jackutApp.isNewLogin(inputLogin);
-                if (!isNew) {
-                    System.out.println("Conta ja existe!");
-                }
-
-            } while (!isNew);
-
-            System.out.println("Digite uma senha");
-            inputSenha = input.nextLine();
-            System.out.println("Digite seu nome");
-            inputNome = input.nextLine();
-            Conta novaConta = new Conta(inputNome, inputLogin, inputSenha);
-            isCreated = jackutApp.criarConta(novaConta);
-
-            if (isCreated) {
-                System.out.println("Conta criada!");
-            } else {
-                System.out.println("Conta nao foi criada!");
-            }
-
+            menuCriacaoDeContas(jackutApp);
             break;
         case "2":// Login
 
@@ -77,8 +62,12 @@ public class Main {
             if (userID != -1) {
                 // abrir menu de usuário aqui
                 System.out.println("Abrindo menu de usuário...");
-                loggedInMenu(userID, jackutApp);
-                // menu vai aqui
+
+                if (jackutApp.getConta(userID) instanceof ContaAdmin) {
+                    loggedInAdminMenu(userID, jackutApp);
+                } else {
+                    loggedInMenu(userID, jackutApp);
+                }
 
             } else {
                 System.out.println("Informações incorretas de login.");
@@ -107,8 +96,6 @@ public class Main {
             System.out.println("====================");
         }
     }
-
-    // Codigo isStringNUmberOnly era "Dead code"
 
     // Acesso de menu para usuário
     // Editar perfil, adicionar amigos, enviar mensagens e ler mensagens
@@ -147,6 +134,177 @@ public class Main {
 
         } while (opcaoLogged.compareToIgnoreCase("4") != 0);
 
+    }
+
+    // Codigo de ContaAdmin e alteracoes pra essa implementacao
+    public static void menuCriacaoDeContas(Jackut jackutApp) {
+
+        boolean isNew = false; // Se é novo o login
+        boolean isCreated = false;
+        boolean isValidOption = true;
+
+        String inputLogin;
+        String inputSenha;
+        String inputNome;
+        String inputTipoConta;
+
+        do {
+            System.out.println("Digite um login.");
+            inputLogin = input.nextLine();
+            isNew = jackutApp.isNewLogin(inputLogin);
+            if (!isNew) {
+                System.out.println("Conta ja existe!");
+            }
+
+        } while (!isNew);
+
+        System.out.println("Digite uma senha");
+        inputSenha = input.nextLine();
+        System.out.println("Digite seu nome");
+        inputNome = input.nextLine();
+
+        do {
+            System.out.println("Escolha o tipo de conta");
+            System.out.println("1: Conta usuario");
+            System.out.println("2: Conta admin");
+            inputTipoConta = input.nextLine();
+
+            if (inputTipoConta.equals("1")) {
+                Conta novaConta = new Conta(inputNome, inputLogin, inputSenha);
+                isCreated = jackutApp.criarConta(novaConta);
+                isValidOption = true;
+            } else if (inputTipoConta.equals("2")) {
+                ContaAdmin novaConta = new ContaAdmin(inputNome, inputLogin, inputSenha);
+                isCreated = jackutApp.criarContaAdmin(novaConta);
+                isValidOption = true;
+            } else {
+                isValidOption = false;
+                System.out.println(OPC_INVALIDA);
+            }
+
+        } while (!isValidOption);
+
+        if (isCreated) {
+            System.out.println("Conta foi criada");
+        } else {
+            System.out.println("A lista jackut esta cheia");
+        }
+
+    }
+
+    public static void menuDeletarUsuario(int userID, Jackut jackutApp) {
+        String inputLoginToDel;
+
+        System.out.println("Digite o login da conta a remover:");
+        inputLoginToDel = input.nextLine();
+
+        if (jackutApp.obterIndiceDeUsuario(inputLoginToDel) == userID) {
+            System.out.println("Nao é possivel se deletar!");
+
+        } else if (jackutApp.isALogin(inputLoginToDel)) {
+            jackutApp.removerConta(inputLoginToDel);
+            System.out.println("Usuario deletado!");
+
+        } else {
+            System.out.println("Login nao existe!");
+        }
+
+    }
+
+    public static void acoesDeEditarUsuario(String login, Jackut jackutApp) {
+        String inputOp;
+        int indiceDeLogin = jackutApp.obterIndiceDeUsuario(login);
+
+        do {
+            System.out.println("Opcoes admin de edicao de conta");
+            System.out.println("1: Editar nome");
+            System.out.println("2: Editar senha");
+            System.out.println("3: Voltar");
+            inputOp = input.nextLine();
+
+            switch (inputOp) {
+            case "1":
+                System.out.println("Digite um novo nome");
+                String novoNome = input.nextLine();
+                jackutApp.getConta(indiceDeLogin).setNome(novoNome);
+                System.out.println("Nome alterado!");
+                break;
+            case "2":
+                System.out.println("Digite uma nova senha");
+                String novaSenha = input.nextLine();
+                jackutApp.getConta(indiceDeLogin).setSenha(novaSenha);
+                System.out.println("Senha alterada!");
+                break;
+            case "3":
+                System.out.println("Voltando");
+                break;
+            default:
+                System.out.println(OPC_INVALIDA);
+                break;
+            }
+        } while (!inputOp.equals("3"));
+
+    }
+
+    public static void menuEditarUsuario(Jackut jackutApp) {
+        String inputLoginToEdit;
+
+        System.out.println("Digite o login da conta a editar:");
+        inputLoginToEdit = input.nextLine();
+
+        if (jackutApp.isALogin(inputLoginToEdit)) {
+            acoesDeEditarUsuario(inputLoginToEdit, jackutApp);
+        } else {
+            System.out.println("Login nao existe!");
+        }
+
+    }
+
+    public static void loggedInAdminMenu(int userID, Jackut jackutApp) {
+        String opcaoLogged;
+
+        do {
+            System.out.println("Bem vindo/a de volta," + jackutApp.obterNomeUsuario(userID));
+            System.out.println("1 - Editar Perfil");
+            System.out.println("2 - Amigos");
+            System.out.println("3 - Chat");
+            System.out.println("4 - Logout");
+            System.out.println("*************");
+            System.out.println("Opcoes admin");
+            System.out.println("5 - Deletar usuario");
+            System.out.println("6 - Editar usuario");
+
+            // Nao precisa checar pois o proprio switch default se encarrega disso
+            opcaoLogged = input.nextLine();
+
+            switch (opcaoLogged) {
+
+            case "1":
+                System.out.println("Editar perfil");
+                perfilMenu(userID, jackutApp);
+                break;
+            case "2":
+                amigosMenu(userID, jackutApp);
+                break;
+            case "3":
+                // Chat
+                chat(userID, jackutApp);
+                break;
+            case "4":
+                System.out.println("Fazendo logout...");
+                break;
+            case "5":
+                menuDeletarUsuario(userID, jackutApp);
+                break;
+            case "6":
+                menuEditarUsuario(jackutApp);
+                break;
+            default:
+                System.out.println(OPC_INVALIDA);
+                break;
+            }
+
+        } while (!opcaoLogged.equals("4"));
     }
 
     // ************************************************************ */
@@ -219,7 +377,7 @@ public class Main {
 
     public static void menuConvitesPendentes(int userID, Jackut jackutApp, int indiceDeConvitesRecebidos) {
         String op;
-        
+
         do {
 
             System.out.format("Deseja aceitar algum convite?" + "%n1: Sim" + "%n2: Nao %n");
@@ -234,7 +392,7 @@ public class Main {
                 Conta novoAmigo = jackutApp.getConta(amigoID);
 
                 boolean isAFriendNow = jackutApp.getConta(userID).aceitarAmizade(novoAmigo);
-                
+
                 if (isAFriendNow) {
                     System.out.println("Contato adicionado!");
                     indiceDeConvitesRecebidos = jackutApp.getConta(userID).getIndiceDeConvitesRecebidos();

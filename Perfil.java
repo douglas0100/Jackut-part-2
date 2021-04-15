@@ -11,24 +11,25 @@ public class Perfil {
 
 
     //Informações básicas
-    private int diaNascimento = 0;
-    private String mesNascimento = "(vazio)"; 
-    private int anoNascimento = 0000;
-    private String genero = "(vazio)";          //sexo da pessoa
+    
+    private int diaNascimento;
+    private String mesNascimento; 
+    private int anoNascimento;
+    private String genero;          //sexo da pessoa
 
     //Informações de status atual
-    private String cidadeNatal = "(vazio)";
-    private String cidadeAtual = "(vazio)";
-    private String estadoCivil = "(vazio)";
+    private String cidadeNatal;
+    private String cidadeAtual;
+    private String estadoCivil;
 
     //Informações de estudo/emprego
-    private String instituicaoEnsinoMedio = "(vazio)";
-    private String instituicaoFaculdade = "(vazio)";
-    private String ocupacaoTrabalho = "(vazio)";
+    private String instituicaoEnsinoMedio;
+    private String instituicaoFaculdade;
+    private String ocupacaoTrabalho;
 
     //Informações para Contato
-    private String contatoEmail = "(vazio)";
-    private String contatoCelular = "(vazio)";  //celular apenas, pelo que vi Face não tem telefone
+    private String contatoEmail;
+    private String contatoCelular;  //celular apenas, pelo que vi Face não tem telefone
 
     //Informações que usuário não altera diretamente
     private int totalAmigos;
