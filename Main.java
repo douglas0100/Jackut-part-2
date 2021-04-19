@@ -446,7 +446,7 @@ public class Main {
                 System.out.format("Mensagem %n" + "Digite: ");
                 String desc = input.nextLine();
                 login = jackutApp.getConta(userID).getLogin();
-                mensagem = new Mensagem(login, desc);
+                mensagem = new MensagemSimples(login, desc);
                 jackutApp.getConta(posicao).enviaMensagem(mensagem);
                 System.out.format("Mensagem enviada! %n");
             }
