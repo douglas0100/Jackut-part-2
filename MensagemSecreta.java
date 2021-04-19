@@ -12,7 +12,7 @@ public class MensagemSecreta extends MensagemSimples {
     }
 
     public boolean validaSenha(String senha) {
-        for (int i = 0; i < senha.length(); i = i + 1) {
+        for (int i = 0; i < this.senha.length(); i = i + 1) {
             if (senha.charAt(i) != this.senha.charAt(i)) {
                 return false;
             }
@@ -23,10 +23,9 @@ public class MensagemSecreta extends MensagemSimples {
     @Override
     public String toString(){
         return String.format("------------- %n"
-                + "%d - Mensagem de %s %n"
-                + "Conteudo: %s %n"
-                + "------------- %n", this.getLogin(),
-                "*********");
+                + "Mensagem de %s %n"
+                + "Conteudo: ****** %n"
+                + "------------- %n", this.getLogin());
     }
 
 }
