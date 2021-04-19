@@ -1,4 +1,4 @@
-public class MensagemSecreta extends Mensagem {
+public class MensagemSecreta extends MensagemSimples {
     private String senha;
 
     public MensagemSecreta(String senha) {
