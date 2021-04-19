@@ -384,24 +384,31 @@ public class Main {
         String opc = null;
         do {
             System.out.format("---- Jackut Chat ----%n" + "Selecione uma opção %n" + "1 - Caixa de entrada %n"
-                    + "2 - Nova Mensagem %n" + "3 - Voltar ao menu de usuario %n");
+                    + "2 - Caixa de entrada Secreta %n" + "3 - Nova Mensagem %n" + "4 - Nova Mensagem Secreta %n"
+                    + "5 - Voltar ao menu de usuario %n");
             opc = input.nextLine();
 
             switch (opc) {
             case "1":
-                caixaDeEntrada(userID, jackutApp);
+                caixaDeEntradaSimples(userID, jackutApp);
                 break;
             case "2":
-                novaMensagem(userID, jackutApp);
+                caixaDeEntradaSecreta(userID, jackutApp);
                 break;
             case "3":
+                novaMensagemSimples(userID, jackutApp);
+                break;
+            case "4":
+                novaMensagemSecreta(userID, jackutApp);
+                break;
+            case "5":
                 System.out.format("voltando ao menu... %n");
                 break;
             default:
                 System.out.println(OPC_INVALIDA);
                 break;
             }
-        } while (opc.compareToIgnoreCase("3") != 0);
+        } while (opc.compareToIgnoreCase("5") != 0);
     }
 
     /*
@@ -411,14 +418,60 @@ public class Main {
      * que estão no repositorio.
      */
 
-    public static void caixaDeEntrada(int userID, Jackut jackutApp) {
-        if (jackutApp.getConta(userID).getQtdMensagens() == 0) {
+    public static void caixaDeEntradaSimples(int userID, Jackut jackutApp) {
+        if (jackutApp.getConta(userID).getQtdMensagensSimples() == 0) {
             System.out.format("Caixa de entrada vazia! %n");
         } else {
-            for (int i = 0; i < jackutApp.getConta(userID).getQtdMensagens(); i = i + 1) {
-                System.out.format("%n %s %n", jackutApp.getConta(userID).getCaixaDeEntrada(i));
+            for (int i = 0; i < jackutApp.getConta(userID).getQtdMensagensSimples(); i = i + 1) {
+                System.out.format("%n%d - %s %n", i + 1, jackutApp.getConta(userID).getCaixaDeEntradaSimples(i));
             }
         }
+    }
+
+
+    public static void caixaDeEntradaSecreta(int userID, Jackut jackutApp) {
+        if (jackutApp.getConta(userID).getQtdMensagensSecretas() == 0) {
+            System.out.format("Caixa de entrada vazia! %n");
+        } else {
+            for (int i = 0; i < jackutApp.getConta(userID).getQtdMensagensSecretas(); i = i + 1) {
+                System.out.format("%n%d - %s %n", i + 1, jackutApp.getConta(userID).getCaixaDeEntradaSecreta(i));
+            }
+
+            System.out.format("Gostaria de ler alguma dessas mensagens? %n"
+                + "1 - Sim %n"
+                + "2 - Não %n"
+                + "Digite: ");
+            String opc = input.nextLine();
+            if(opc.equals("1")){
+                System.out.format("Digite o numero da mensagem que deseja ler %n"
+                +    "Digite: ");
+                int mensNum = input.nextInt();
+                while(mensNum - 1 < 0 ||
+                    mensNum - 1 > jackutApp.getConta(userID).getQtdMensagensSecretas()){
+                    System.out.format("Valor invalido! %n"
+                    +    "Digite novamente: ");
+                    mensNum  = input.nextInt();
+                }
+
+                System.out.format("Digite a senha : ");
+                String senha = input.nextLine();
+
+                while(!jackutApp.getConta(userID).getCaixaDeEntradaSecreta(mensNum)
+                .validaSenha(senha)){
+                    System.out.format("Senha invalida! %n"
+                    +   "Digite novamente: ");
+                    senha = input.nextLine();
+                }
+
+                MensagemSimples mens = jackutApp.getConta(userID).getCaixaDeEntradaSecreta(mensNum);
+                System.out.format("%s ", mens);
+
+
+
+            }
+        }
+
+        
     }
 
     /*
@@ -429,10 +482,10 @@ public class Main {
      * repositorio de contas do destinatario.
      */
 
-    public static void novaMensagem(int userID, Jackut jackutApp) {
+    public static void novaMensagemSimples(int userID, Jackut jackutApp) {
         String opc;
         do {
-            Mensagem mensagem;
+            MensagemSimples mensagem;
             System.out.format("Login do destinatario %n");
             String login = input.nextLine();
             int posicao = buscarIdPeloLogin(jackutApp, login);
@@ -447,7 +500,37 @@ public class Main {
                 String desc = input.nextLine();
                 login = jackutApp.getConta(userID).getLogin();
                 mensagem = new MensagemSimples(login, desc);
-                jackutApp.getConta(posicao).enviaMensagem(mensagem);
+                jackutApp.getConta(posicao).enviaMensagemSimples(mensagem);
+                System.out.format("Mensagem enviada! %n");
+            }
+            System.out.format("Gostaria de enviar uma nova mensagem? %n" + "1 - Sim %n" + "2 - Não %n" + "Digite: ");
+            opc = input.nextLine();
+        } while (opc.compareToIgnoreCase("2") != 0);
+    }
+
+    public static void novaMensagemSecreta(int userID, Jackut jackutApp) {
+        String opc;
+        do {
+            MensagemSecreta mensagem;
+            System.out.format("Login do destinatario %n" + "Digite: ");
+            String login = input.nextLine();
+            int posicao = buscarIdPeloLogin(jackutApp, login);
+            if (posicao == -1) {
+                while (posicao == -1) {
+                    System.out.format("Nome invalido! %n");
+                    login = input.nextLine();
+                    posicao = buscarIdPeloLogin(jackutApp, login);
+                }
+            } else {
+                System.out.format("Mensagem %n" + "Digite: ");
+                String desc = input.nextLine();
+                login = jackutApp.getConta(userID).getLogin();
+
+                System.out.format("Senha %n" + "Digite: ");
+                String senha = input.nextLine();
+
+                mensagem = new MensagemSecreta(login, desc, senha);
+                jackutApp.getConta(posicao).enviaMensagemSecreta(mensagem);
                 System.out.format("Mensagem enviada! %n");
             }
             System.out.format("Gostaria de enviar uma nova mensagem? %n" + "1 - Sim %n" + "2 - Não %n" + "Digite: ");

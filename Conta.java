@@ -5,7 +5,8 @@ public class Conta {
     private String nome;
     private String login;
     private String senha;
-    private Mensagem[] caixaDeEntrada;
+    private MensagemSimples[] caixaDeEntradaSimples;
+    private MensagemSecreta[] caixaDeEntradaSecreta;
 
     private String[] convitesEnviados;
     private String[] convitesRecebidos;
@@ -16,7 +17,8 @@ public class Conta {
     private Amigo[] listaDeAmigos;
     private int indiceDeAmigos;
 
-    private int qtdMensagens;
+    private int qtdMensagensSimples;
+    private int qtdMensagensSecretas;
     // atributos abaixo são de perfil, deviam ser movidas para outra classe depois
     // talvez
     // ---------------------------------------
@@ -44,12 +46,14 @@ public class Conta {
         this.nome = nome;
         this.login = login;
         this.senha = senha;
-        this.caixaDeEntrada = new Mensagem[TAM];
+        this.caixaDeEntradaSimples = new MensagemSimples[TAM];
+        this.caixaDeEntradaSecreta = new MensagemSecreta[TAM];
 
         this.convitesEnviados = new String[TAM];
         this.convitesRecebidos = new String[TAM];
         this.listaDeAmigos = new Amigo[TAM];
-        this.qtdMensagens = 0;
+        this.qtdMensagensSimples = 0;
+        this.qtdMensagensSecretas = 0;
     }
 
     // ------------------ Metodos -----------------------------
@@ -155,11 +159,21 @@ public class Conta {
 
     }
 
-    public boolean enviaMensagem(Mensagem mensagem) {
+    public boolean enviaMensagemSimples(MensagemSimples mensagem) {
         boolean retorno = false;
-        if (mensagem != null && this.qtdMensagens < this.caixaDeEntrada.length) {
-            this.caixaDeEntrada[this.qtdMensagens] = mensagem;
-            this.qtdMensagens = this.qtdMensagens + 1;
+        if (mensagem != null && this.qtdMensagensSimples < this.caixaDeEntradaSimples.length) {
+            this.caixaDeEntradaSimples[this.qtdMensagensSimples] = mensagem;
+            this.qtdMensagensSimples = this.qtdMensagensSimples + 1;
+            retorno = true;
+        }
+        return retorno;
+    }
+
+    public boolean enviaMensagemSecreta(MensagemSecreta mensagem) {
+        boolean retorno = false;
+        if (mensagem != null && this.qtdMensagensSecretas < this.caixaDeEntradaSecreta.length) {
+            this.caixaDeEntradaSecreta[this.qtdMensagensSecretas] = mensagem;
+            this.qtdMensagensSecretas = this.qtdMensagensSecretas + 1;
             retorno = true;
         }
         return retorno;
@@ -201,12 +215,20 @@ public class Conta {
     }
 
     // ------------- get/set mensagens ----------------
-    public int getQtdMensagens() {
-        return this.qtdMensagens;
+    public int getQtdMensagensSimples() {
+        return this.qtdMensagensSimples;
     }
 
-    public Mensagem getCaixaDeEntrada(int id) {
-        return this.caixaDeEntrada[id];
+    public int getQtdMensagensSecretas() {
+        return this.qtdMensagensSecretas;
+    }
+
+    public MensagemSimples getCaixaDeEntradaSimples(int id) {
+        return this.caixaDeEntradaSimples[id];
+    }
+
+    public MensagemSecreta getCaixaDeEntradaSecreta(int id) {
+        return this.caixaDeEntradaSecreta[id];
     }
 
     // ------------- get/set convites ----------------

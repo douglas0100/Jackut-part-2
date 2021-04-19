@@ -1,8 +1,9 @@
 public class MensagemSecreta extends MensagemSimples {
     private String senha;
 
-    public MensagemSecreta(String senha) {
-        super();
+    
+    public MensagemSecreta(String login, String descricao, String senha) {
+        super(login, descricao);
         this.senha = senha;
     }
 
@@ -10,12 +11,22 @@ public class MensagemSecreta extends MensagemSimples {
         return this.senha;
     }
 
-    public static boolean validaSenha(String senha, MensagemSecreta mensagem) {
+    public boolean validaSenha(String senha) {
         for (int i = 0; i < senha.length(); i = i + 1) {
-            if (senha.charAt(i) != mensagem.getSenha().charAt(i)) {
+            if (senha.charAt(i) != this.senha.charAt(i)) {
                 return false;
             }
         }
         return true;
     }
+
+    @Override
+    public String toString(){
+        return String.format("------------- %n"
+                + "%d - Mensagem de %s %n"
+                + "Conteudo: %s %n"
+                + "------------- %n", this.getLogin(),
+                "*********");
+    }
+
 }
