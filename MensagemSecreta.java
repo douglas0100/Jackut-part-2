@@ -22,8 +22,7 @@ public class MensagemSecreta extends MensagemSimples {
 
     @Override
     public String toString(){
-        return String.format("------------- %n"
-                + "Mensagem de %s %n"
+        return String.format("Mensagem de %s %n"
                 + "Conteudo: ****** %n"
                 + "------------- %n", this.getLogin());
     }

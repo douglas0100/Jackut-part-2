@@ -445,6 +445,12 @@ public class Main {
             + "2 - Não %n" 
             + "Digite: ");
             String opc = input.nextLine();
+
+            while(!opc.equals("1") && !opc.equals("2")){
+                System.out.format("Opção invalida! %n"
+                + "Digite novamente: ");
+                opc = input.nextLine();
+            }
             if (opc.equals("1")) {
                 System.out.format("Digite o numero da mensagem que deseja ler %n" 
                 + "Digite: ");
@@ -463,8 +469,10 @@ public class Main {
                     senha = input.nextLine();
                 }
 
-                MensagemSimples mens = jackutApp.getConta(userID).getCaixaDeEntradaSecreta(mensNum);
+                MensagemSimples mens = new MensagemSimples(jackutApp.getConta(userID).getCaixaDeEntradaSecreta(mensNum));
                 System.out.format("%s ", mens);
+            }else{
+                System.out.format("Voltando ao menu... %n");
             }
         }
     }
@@ -486,8 +494,9 @@ public class Main {
             String login = input.nextLine();
             int posicao = buscarIdPeloLogin(jackutApp, login);
             if (posicao == -1) {
-                while (posicao == -1) {
-                    System.out.format("Nome invalido! %n");
+                while (posicao == -1 || login.equals(jackutApp.getConta(userID).getLogin())) {
+                    System.out.format("Login invalido! %n"
+                    + "Digite novamente: ");
                     login = input.nextLine();
                     posicao = buscarIdPeloLogin(jackutApp, login);
                 }
@@ -517,8 +526,9 @@ public class Main {
             String login = input.nextLine();
             int posicao = buscarIdPeloLogin(jackutApp, login);
             if (posicao == -1) {
-                while (posicao == -1) {
-                    System.out.format("Nome invalido! %n");
+                while (posicao == -1 || login.equals(jackutApp.getConta(userID).getLogin())) {
+                    System.out.format("Login invalido! %n"
+                    + "Digite novamente: ");
                     login = input.nextLine();
                     posicao = buscarIdPeloLogin(jackutApp, login);
                 }

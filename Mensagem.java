@@ -22,8 +22,7 @@ public abstract class Mensagem {
     
     @Override
     public String toString(){
-        return String.format("------------- %n"
-                + "Mensagem de %s %n"
+        return String.format("Mensagem de %s %n"
                 + "Conteudo: %s %n"
                 + "------------- %n", this.login,
                 this.descricao);
