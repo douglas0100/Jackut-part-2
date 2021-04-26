@@ -1,3 +1,5 @@
+import java.util.LinkedList;
+
 public class Conta {
 
     private static final int TAM = 100; // Constante do tamanho da lista de contas do Jackut
@@ -15,6 +17,9 @@ public class Conta {
 
     private Amigo[] listaDeAmigos;
     private int indiceDeAmigos;
+
+    private LinkedList<MuralMessageContent> muralRecebidos = new LinkedList<>();
+    private LinkedList<MuralMessageContent> muralConfirmados = new LinkedList<>();
 
     private int qtdMensagens;
 
@@ -169,6 +174,55 @@ public class Conta {
         }
         return retorno;
     }
+
+    // Relacionados a postagem de mensagem no mural
+    // por Matheus Antônio, para entrega da Prova 1
+
+    // Adicionar mensagem recebida para ser avaliada (não é mural publico)
+    public void postarMensagemMural(MuralMessageContent mensagem) {
+        muralRecebidos.add(mensagem);
+    }
+
+    // private LinkedList<MuralMessageContent> muralRecebidos
+    // private Mural muralConfirmados
+    public String visualizarMuralPrimeiroRecebido() {
+        // visualizar primeira mensagem recebida para submeter no mural
+        if (muralRecebidos.isEmpty()) {
+            return null;
+        } else {
+            return muralRecebidos.getFirst().toString();
+        }
+    }
+
+    public int mensagensMuralNaoAvaliadas() {
+        return muralRecebidos.size();
+    }
+
+    public boolean muralRecebidosIsEmpty() {
+        if (muralRecebidos.isEmpty()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void confirmarMensagemMural() {
+        // transferir mensagem de muralRecebidos para muralConfirmados
+        muralConfirmados.add(muralRecebidos.getFirst());
+        muralRecebidos.removeFirst();
+    }
+
+    public void deletarMensagemMural() {
+        muralRecebidos.removeFirst();
+    }
+
+    public LinkedList returnToPrintLinkedList() {
+        return muralConfirmados;
+    }
+
+    //FIM DA PROVA 1 QUESTÃO D
+
+    // -----------------------------------------------
 
     // -----------------------------------------------
 
@@ -335,6 +389,25 @@ public class Conta {
 
     public void setContatoCelular(String contatoCelular) {
         this.contatoCelular = contatoCelular;
+    }
+
+    // GETS e SETS relacionados ao MURAL de mensagens, de Matheus
+    // Sonarlint tá reclamando mas ele reclama demais, sendo necessário altero depois
+
+    public LinkedList<MuralMessageContent> getMuralRecebidos() {
+        return this.muralRecebidos;
+    }
+
+    public void setMuralRecebidos(LinkedList<MuralMessageContent> muralRecebidos) {
+        this.muralRecebidos = muralRecebidos;
+    }
+
+    public LinkedList<MuralMessageContent> getMuralConfirmados() {
+        return this.muralConfirmados;
+    }
+
+    public void setMuralConfirmados(LinkedList<MuralMessageContent> muralConfirmados) {
+        this.muralConfirmados = muralConfirmados;
     }
 
     // ======================================================================================
