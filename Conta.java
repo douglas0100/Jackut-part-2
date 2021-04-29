@@ -19,16 +19,12 @@ public class Conta {
     private Amigo[] listaDeAmigos;
     private int indiceDeAmigos;
 
-<<<<<<< HEAD
     private int qtdMensagensSimples;
     private int qtdMensagensSecretas;
-=======
+
     private LinkedList<MuralMessageContent> muralRecebidos = new LinkedList<>();
     private LinkedList<MuralMessageContent> muralConfirmados = new LinkedList<>();
 
-    private int qtdMensagens;
-
->>>>>>> 9afb5ed48b9815b1d7923b54de38f0d11b9d4d74
     
     // atributos abaixo são de perfil, deviam ser movidas para outra classe depois
     // talvez
