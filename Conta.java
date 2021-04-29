@@ -1,3 +1,5 @@
+import java.util.LinkedList;
+
 public class Conta {
 
     private static final int TAM = 100; // Constante do tamanho da lista de contas do Jackut
@@ -17,8 +19,16 @@ public class Conta {
     private Amigo[] listaDeAmigos;
     private int indiceDeAmigos;
 
+<<<<<<< HEAD
     private int qtdMensagensSimples;
     private int qtdMensagensSecretas;
+=======
+    private LinkedList<MuralMessageContent> muralRecebidos = new LinkedList<>();
+    private LinkedList<MuralMessageContent> muralConfirmados = new LinkedList<>();
+
+    private int qtdMensagens;
+
+>>>>>>> 9afb5ed48b9815b1d7923b54de38f0d11b9d4d74
     
     // atributos abaixo são de perfil, deviam ser movidas para outra classe depois
     // talvez
@@ -58,6 +68,7 @@ public class Conta {
     }
 
     // ------------------ Metodos -----------------------------
+    
     public boolean isNewInvite(String login) {
         boolean isNewInvite = true;
         if (indiceDeConvitesEnviados != 0) {
@@ -113,7 +124,7 @@ public class Conta {
             // Procura o convite do amigo em "convitesRecebidos"
             for (int i = 0; i < indiceDeConvitesRecebidos; i++) {
                 if (convitesRecebidos[i].equals(novoAmigo.getLogin())) {
-                    organizarConvitesRecebidos(i, indiceDeConvitesRecebidos);
+                    organizarConvitesRecebidos(i);
                     indiceDeConvitesRecebidos--;
                     organizarConvitesEnviadosDoAmigo(novoAmigo);
                     novoAmigo.setIndiceDeConvitesEnviados(novoAmigo.getIndiceDeConvitesEnviados() - 1);
@@ -125,15 +136,16 @@ public class Conta {
 
     // Remove o convite da posicao indice e coloca os convites das posicoes
     // posteriores uma posicao antes
-    public void organizarConvitesRecebidos(int indice, int tamDeConvites) {
+    public void organizarConvitesRecebidos(int indice) {
         if (indice == 0) {
             convitesRecebidos[indice] = null;
         } else if (indice == TAM) {
             convitesRecebidos[indice] = null;
         } else {
-            for (int i = indice + 1; i < tamDeConvites; i++) {
+            for (int i = indice + 1; i < indiceDeConvitesRecebidos; i++) {
                 convitesRecebidos[i - 1] = convitesRecebidos[i];
             }
+            convitesRecebidos[indiceDeConvitesRecebidos] = null;
         }
 
     }
@@ -154,6 +166,7 @@ public class Conta {
                     for (int j = (i + 1); j < indiceDeConvitesEnviadosAmigo; j++) {
                         novoAmigo.setConviteEnviado(j - 1, convitesEnviadosDeAmigos[j]);
                     }
+                    novoAmigo.setConviteEnviado(indiceDeConvitesEnviadosAmigo, null);
                 }
             }
         }
@@ -179,6 +192,55 @@ public class Conta {
         }
         return retorno;
     }
+
+    // Relacionados a postagem de mensagem no mural
+    // por Matheus Antônio, para entrega da Prova 1
+
+    // Adicionar mensagem recebida para ser avaliada (não é mural publico)
+    public void postarMensagemMural(MuralMessageContent mensagem) {
+        muralRecebidos.add(mensagem);
+    }
+
+    // private LinkedList<MuralMessageContent> muralRecebidos
+    // private Mural muralConfirmados
+    public String visualizarMuralPrimeiroRecebido() {
+        // visualizar primeira mensagem recebida para submeter no mural
+        if (muralRecebidos.isEmpty()) {
+            return null;
+        } else {
+            return muralRecebidos.getFirst().toString();
+        }
+    }
+
+    public int mensagensMuralNaoAvaliadas() {
+        return muralRecebidos.size();
+    }
+
+    public boolean muralRecebidosIsEmpty() {
+        if (muralRecebidos.isEmpty()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void confirmarMensagemMural() {
+        // transferir mensagem de muralRecebidos para muralConfirmados
+        muralConfirmados.add(muralRecebidos.getFirst());
+        muralRecebidos.removeFirst();
+    }
+
+    public void deletarMensagemMural() {
+        muralRecebidos.removeFirst();
+    }
+
+    public LinkedList returnToPrintLinkedList() {
+        return muralConfirmados;
+    }
+
+    //FIM DA PROVA 1 QUESTÃO D
+
+    // -----------------------------------------------
 
     // -----------------------------------------------
 
@@ -353,6 +415,25 @@ public class Conta {
 
     public void setContatoCelular(String contatoCelular) {
         this.contatoCelular = contatoCelular;
+    }
+
+    // GETS e SETS relacionados ao MURAL de mensagens, de Matheus
+    // Sonarlint tá reclamando mas ele reclama demais, sendo necessário altero depois
+
+    public LinkedList<MuralMessageContent> getMuralRecebidos() {
+        return this.muralRecebidos;
+    }
+
+    public void setMuralRecebidos(LinkedList<MuralMessageContent> muralRecebidos) {
+        this.muralRecebidos = muralRecebidos;
+    }
+
+    public LinkedList<MuralMessageContent> getMuralConfirmados() {
+        return this.muralConfirmados;
+    }
+
+    public void setMuralConfirmados(LinkedList<MuralMessageContent> muralConfirmados) {
+        this.muralConfirmados = muralConfirmados;
     }
 
     // ======================================================================================

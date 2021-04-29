@@ -1,4 +1,6 @@
 import java.util.Scanner;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 public class Main {
 
@@ -8,6 +10,7 @@ public class Main {
     // Menu de opcoes
     public static String menu() {
         String op;
+        boolean isValidOption = false;
         do {
 
             System.out.println("Escolha uma opcao");
@@ -16,11 +19,23 @@ public class Main {
             System.out.println("3: Sair");
             op = input.nextLine();
 
-            if (!op.equals("1") && !op.equals("2") && !op.equals("3")) {
+            switch (op) {
+            case "1":
+                isValidOption = true;
+                break;
+            case "2":
+                isValidOption = true;
+                break;
+            case "3":
+                isValidOption = true;
+                break;
+
+            default:
                 System.out.println(OPC_INVALIDA);
+                break;
             }
 
-        } while (!op.equals("1") && !op.equals("2") && !op.equals("3"));
+        } while (!isValidOption);
 
         return op;
     }
@@ -30,35 +45,7 @@ public class Main {
         switch (op) {
 
         case "1":// Criar conta
-            boolean isNew = false; // Se é novo o login
-            boolean isCreated = false;
-            String inputLogin;
-            String inputSenha;
-            String inputNome;
-
-            do {
-                System.out.println("Digite um login.");
-                inputLogin = input.nextLine();
-                isNew = jackutApp.isNewLogin(inputLogin);
-                if (!isNew) {
-                    System.out.println("Conta ja existe!");
-                }
-
-            } while (!isNew);
-
-            System.out.println("Digite uma senha");
-            inputSenha = input.nextLine();
-            System.out.println("Digite seu nome");
-            inputNome = input.nextLine();
-            Conta novaConta = new Conta(inputNome, inputLogin, inputSenha);
-            isCreated = jackutApp.criarConta(novaConta);
-
-            if (isCreated) {
-                System.out.println("Conta criada!");
-            } else {
-                System.out.println("Conta nao foi criada!");
-            }
-
+            menuCriacaoDeContas(jackutApp);
             break;
         case "2":// Login
 
@@ -77,8 +64,12 @@ public class Main {
             if (userID != -1) {
                 // abrir menu de usuário aqui
                 System.out.println("Abrindo menu de usuário...");
-                loggedInMenu(userID, jackutApp);
-                // menu vai aqui
+
+                if (jackutApp.getConta(userID) instanceof ContaAdmin) {
+                    loggedInAdminMenu(userID, jackutApp);
+                } else {
+                    loggedInMenu(userID, jackutApp);
+                }
 
             } else {
                 System.out.println("Informações incorretas de login.");
@@ -108,8 +99,6 @@ public class Main {
         }
     }
 
-    // Codigo isStringNUmberOnly era "Dead code"
-
     // Acesso de menu para usuário
     // Editar perfil, adicionar amigos, enviar mensagens e ler mensagens
     public static void loggedInMenu(int userID, Jackut jackutApp) {
@@ -120,7 +109,8 @@ public class Main {
             System.out.println("1 - Editar Perfil");
             System.out.println("2 - Amigos");
             System.out.println("3 - Chat");
-            System.out.println("4 - Logout");
+            System.out.println("4 - Consultar Perfil de Outro Usuário");
+            System.out.println("5 - Logout");
             // Nao precisa checar pois o proprio switch default se encarrega disso
             opcaoLogged = input.nextLine();
 
@@ -138,6 +128,10 @@ public class Main {
                 chat(userID, jackutApp);
                 break;
             case "4":
+                // Consultar perfil - implementado para poder ver mural conforme requisito!
+                perfilConsulta(userID, jackutApp);
+                break;
+            case "5":
                 System.out.println("Fazendo logout...");
                 break;
             default:
@@ -145,8 +139,184 @@ public class Main {
                 break;
             }
 
-        } while (opcaoLogged.compareToIgnoreCase("4") != 0);
+        } while (opcaoLogged.compareToIgnoreCase("5") != 0);
 
+    }
+
+    // Codigo de ContaAdmin e alteracoes pra essa implementacao
+    public static void menuCriacaoDeContas(Jackut jackutApp) {
+
+        boolean isNew = false; // Se é novo o login
+        boolean isCreated = false;
+        boolean isValidOption = true;
+
+        String inputLogin;
+        String inputSenha;
+        String inputNome;
+        String inputTipoConta;
+
+        do {
+            System.out.println("Digite um login.");
+            inputLogin = input.nextLine();
+            isNew = jackutApp.isNewLogin(inputLogin);
+            if (!isNew) {
+                System.out.println("Conta ja existe!");
+            }
+
+        } while (!isNew);
+
+        System.out.println("Digite uma senha");
+        inputSenha = input.nextLine();
+        System.out.println("Digite seu nome");
+        inputNome = input.nextLine();
+
+        do {
+            System.out.println("Escolha o tipo de conta");
+            System.out.println("1: Conta usuario");
+            System.out.println("2: Conta admin");
+            inputTipoConta = input.nextLine();
+
+            if (inputTipoConta.equals("1")) {
+                Conta novaConta = new Conta(inputNome, inputLogin, inputSenha);
+                isCreated = jackutApp.criarConta(novaConta);
+                isValidOption = true;
+            } else if (inputTipoConta.equals("2")) {
+                ContaAdmin novaConta = new ContaAdmin(inputNome, inputLogin, inputSenha);
+                isCreated = jackutApp.criarContaAdmin(novaConta);
+                isValidOption = true;
+            } else {
+                isValidOption = false;
+                System.out.println(OPC_INVALIDA);
+            }
+
+        } while (!isValidOption);
+
+        if (isCreated) {
+            System.out.println("Conta foi criada");
+        } else {
+            System.out.println("A lista jackut esta cheia");
+        }
+
+    }
+
+    public static void menuDeletarUsuario(int userID, Jackut jackutApp) {
+        String inputLoginToDel;
+
+        System.out.println("Digite o login da conta a remover:");
+        inputLoginToDel = input.nextLine();
+
+        if (jackutApp.obterIndiceDeUsuario(inputLoginToDel) == userID) {
+            System.out.println("Nao é possivel se deletar!");
+
+        } else if (jackutApp.isALogin(inputLoginToDel)) {
+            jackutApp.removerConta(inputLoginToDel);
+            System.out.println("Usuario deletado!");
+
+        } else {
+            System.out.println("Login nao existe!");
+        }
+
+    }
+
+    public static void acoesDeEditarUsuario(String login, Jackut jackutApp) {
+        String inputOp;
+        int indiceDeLogin = jackutApp.obterIndiceDeUsuario(login);
+
+        do {
+            System.out.println("Opcoes admin de edicao de conta");
+            System.out.println("1: Editar nome");
+            System.out.println("2: Editar senha");
+            System.out.println("3: Voltar");
+            inputOp = input.nextLine();
+
+            switch (inputOp) {
+            case "1":
+                System.out.println("Digite um novo nome");
+                String novoNome = input.nextLine();
+                jackutApp.getConta(indiceDeLogin).setNome(novoNome);
+                System.out.println("Nome alterado!");
+                break;
+            case "2":
+                System.out.println("Digite uma nova senha");
+                String novaSenha = input.nextLine();
+                jackutApp.getConta(indiceDeLogin).setSenha(novaSenha);
+                System.out.println("Senha alterada!");
+                break;
+            case "3":
+                System.out.println("Voltando");
+                break;
+            default:
+                System.out.println(OPC_INVALIDA);
+                break;
+            }
+        } while (!inputOp.equals("3"));
+
+    }
+
+    public static void menuEditarUsuario(Jackut jackutApp) {
+        String inputLoginToEdit;
+
+        System.out.println("Digite o login da conta a editar:");
+        inputLoginToEdit = input.nextLine();
+
+        if (jackutApp.isALogin(inputLoginToEdit)) {
+            acoesDeEditarUsuario(inputLoginToEdit, jackutApp);
+        } else {
+            System.out.println("Login nao existe!");
+        }
+
+    }
+
+    public static void loggedInAdminMenu(int userID, Jackut jackutApp) {
+        String opcaoLogged;
+
+        do {
+            System.out.println("Bem vindo/a de volta," + jackutApp.obterNomeUsuario(userID));
+            System.out.println("1 - Editar Perfil");
+            System.out.println("2 - Amigos");
+            System.out.println("3 - Chat");
+            System.out.println("4 - Consultar Perfil de Outro Usuário");
+            System.out.println("5 - Logout");
+            System.out.println("*************");
+            System.out.println("Opcoes admin");
+            System.out.println("6 - Deletar usuario");
+            System.out.println("7 - Editar usuario");
+
+            // Nao precisa checar pois o proprio switch default se encarrega disso
+            opcaoLogged = input.nextLine();
+
+            switch (opcaoLogged) {
+
+            case "1":
+                System.out.println("Editar perfil");
+                perfilMenu(userID, jackutApp);
+                break;
+            case "2":
+                amigosMenu(userID, jackutApp);
+                break;
+            case "3":
+                // Chat
+                chat(userID, jackutApp);
+                break;
+            case "4":
+                // Consultar perfil - implementado para poder ver mural conforme requisito!
+                perfilConsulta(userID, jackutApp);
+                break;
+            case "5":
+                System.out.println("Fazendo logout...");
+                break;
+            case "6":
+                menuDeletarUsuario(userID, jackutApp);
+                break;
+            case "7":
+                menuEditarUsuario(jackutApp);
+                break;
+            default:
+                System.out.println(OPC_INVALIDA);
+                break;
+            }
+
+        } while (!opcaoLogged.equals("5"));
     }
 
     // ************************************************************ */
@@ -290,7 +460,9 @@ public class Main {
             System.out.println("9 - Alterar OCUPAÇÃO/TRABALHO");
             System.out.println("10 - Alterar E-MAIL para CONTATO");
             System.out.println("11 - Alterar CELULAR para CONTATO");
-            System.out.println("12 - VOLTAR");
+            System.out.println("12 - Visualizar MURAL de COMENTARIOS");
+            System.out.println("13 - Avaliar COMENTARIOS novos para seu MURAL");
+            System.out.println("14 - VOLTAR");
             // Switch default encarrega da chegagem
             opcaoLogged = input.nextLine();
 
@@ -360,7 +532,15 @@ public class Main {
                 String newPhone = input.nextLine();
                 jackutApp.alterarCelularPerfil(newPhone, userID);
                 break;
-            case "12":
+            case "12": // ver COMENTARIOS
+                System.out.println("Visualizar comentários do seu perfil");
+                perfilExibirMuralPublico(userID, jackutApp);
+                break;
+            case "13":
+                System.out.println("Avaliar novos comentarios do seu perfil");
+                perfilAnalisarMuralRecebidas(userID, jackutApp);
+                break;
+            case "14":
                 System.out.println("Voltando...");
                 break;
             default:
@@ -369,9 +549,129 @@ public class Main {
 
             }
 
-        } while (opcaoLogged.compareToIgnoreCase("12") != 0);
+        } while (opcaoLogged.compareToIgnoreCase("14") != 0);
 
     }
+
+    // RELACIONADOS A MURAL, NO PERFIL DO USUÁRIO
+    // Visualizar perfil de qualquer outro usuário - mesmo sem ser amigo
+    // Requisito da letra D da Prova 1, por Matheus Antônio
+    public static void perfilConsulta(int userID, Jackut jackutApp) {
+        String opc;
+        System.out.println("Digite o nome do usuário que você deseja visualizar perfil:");
+        String login = input.nextLine();
+        int posicao = buscarIdPeloLogin(jackutApp, login);
+        if (posicao == -1) {
+            while (posicao == -1) {
+                System.out.format("Nome inválido! Tente novamente: %n");
+                login = input.nextLine();
+                posicao = buscarIdPeloLogin(jackutApp, login);
+            }
+        } else {
+
+            jackutApp.obterPerfilUsuario(posicao);
+            do {
+                System.out.println("Digite 1 para ver as mensagens do mural");
+                System.out.println("Digite 2 para submeter uma mensagem ao mural");
+                System.out.println("Digite 3 para ver perfil novamente");
+                System.out.println("Digite 4 para voltar");
+                opc = input.nextLine();
+                if (opc.compareToIgnoreCase("1") == 0) {
+                    perfilExibirMuralPublico(posicao, jackutApp);
+                } else if (opc.compareToIgnoreCase("2") == 0) {
+                    perfilMensagemMural(userID, posicao, jackutApp);
+                } else if (opc.compareToIgnoreCase("3") == 0) {
+                    jackutApp.obterPerfilUsuario(posicao);
+                } else {
+                    System.out.println("Voltando...");
+                }
+
+            } while (opc.compareToIgnoreCase("4") != 0);
+        }
+    }
+
+    // DEBUG MATHEUS
+    // Submeter uma mensagem para ser avaliada pelo dono do Mural
+    public static void perfilMensagemMural(int userID, int posicao, Jackut jackutApp) {
+        String opc;
+        do {
+            MuralMessageContent mensagem;
+            System.out.println("Digite mensagem para submeter ao perfil de " + jackutApp.getConta(posicao).getNome());
+            String desc = input.nextLine();
+            String nomeToPrint = jackutApp.getConta(userID).getLogin();
+            mensagem = new MuralMessageContent(userID, nomeToPrint, desc);
+            jackutApp.getConta(posicao).postarMensagemMural(mensagem);
+            System.out.println("Mensagem enviada!");
+            System.out.println("Gostaria de submeter outra mensagem? (1 - Sim | 2 - Não):");
+            opc = input.nextLine();
+
+        } while (opc.compareToIgnoreCase("2") != 0);
+    }
+
+    // Tela do usuário ler os comentários que recebeu em seu perfil,
+    // pegando First da lista vamos vendo qual aceita para transferir para lista
+    // principal
+    public static void perfilAnalisarMuralRecebidas(int userID, Jackut jackutApp) {
+        String opc;
+
+        if (jackutApp.getConta(userID).muralRecebidosIsEmpty()) {
+            System.out.println("Você não tem mensagens para avaliar.");
+        } else {
+            do {
+                System.out.println("Você tem " + jackutApp.getConta(userID).mensagensMuralNaoAvaliadas()
+                        + "  mensagens para avaliar antes de serem postadas no seu mural.");
+                System.out.println("Exibindo mensagem mais recente...");
+                System.out.println(jackutApp.getConta(userID).visualizarMuralPrimeiroRecebido());
+                System.out.println("Digite 1 para permitir que essa mensagem apareça no seu mural.");
+                System.out.println("Digite 2 para deletar essa mensagem.");
+
+                // Após acessar primeira mensagem recebida, decidir se transfere para mural
+                // público ou deleta
+
+                System.out.println("Digite 1 (Aceitar) ou 2 (Deletar):");
+                opc = input.nextLine();
+
+                // programa só continuará com opção válida
+
+                switch (opc) {
+                case "1":
+                    // Caso 1: Mensagem aceita. Transfere mensagem para mural
+                    jackutApp.getConta(userID).confirmarMensagemMural();
+                    System.out.println("Mensagem aceita e publicada para o seu mural público!");
+                    break;
+                case "2":
+                    // Caso 2: Mensagem rejeitada. Deleta a primeira mensagem da lista de propostas.
+                    jackutApp.getConta(userID).deletarMensagemMural();
+                    System.out.println("Mensagem rejeitada e não será publicada em seu mural público!");
+                    break;
+                default:
+                    System.out.println(OPC_INVALIDA);
+                    break;
+                }
+
+                if (jackutApp.getConta(userID).muralRecebidosIsEmpty()) {
+                    System.out.println("Não tem mais mensagens para avaliar. Voltando...");
+                    break;
+                } else {
+                    System.out.println("Gostaria de avaliar outra mensagem? (1 - Sim | 2 - Não):");
+                    opc = input.nextLine();
+                }
+
+            } while (opc.compareToIgnoreCase("2") != 0);
+        }
+
+    }
+
+    public static void perfilExibirMuralPublico(int userID, Jackut jackutApp) {
+        LinkedList listAux = jackutApp.getConta(userID).returnToPrintLinkedList();
+        Iterator iterator = listAux.iterator();
+        while (iterator.hasNext()) {
+            System.out.println(iterator.next());
+        }
+
+    }
+
+    // FIM DA PROVA 1 QUESTÃO D
 
     // Funções e Procedimentos Editados por Douglas Leite
     // ---------------------------------------------------------
