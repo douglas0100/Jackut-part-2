@@ -19,6 +19,7 @@ public class Conta {
 
     private int qtdMensagensSimples;
     private int qtdMensagensSecretas;
+    
     // atributos abaixo são de perfil, deviam ser movidas para outra classe depois
     // talvez
     // ---------------------------------------
